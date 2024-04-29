@@ -25,7 +25,7 @@
 <svelte:head>
 	<title>Home - PSG AI</title>
 </svelte:head>
-<div class="grid h-screen w-full grid-cols-5">
+<div class="hidden h-screen w-full grid-cols-5 md:grid">
 	<div class="col-span-2 h-full w-full p-6">
 		<section class="flex max-w-fit items-center gap-2.5 border-r-2 px-2 py-3.5">
 			<img src="/assets/PSG_LOGO.svg" alt="Personalized study guide logo" />
@@ -88,7 +88,7 @@
 		</section>
 		<section class="flex h-full flex-col items-start justify-center gap-5">
 			<!-- <div class="flex w-full items-center justify-center"> -->
-			<h1 class="font-montserrat text-[64px] font-bold text-primary-main_text-white">
+			<h1 class="font-montserrat text-[60px] font-bold text-primary-main_text-white">
 				Need <span class="relative z-10 max-w-fit text-secondary-supporting-light-blue">
 					resources <img src="/assets/Vector 1.svg" class="absolute right-32 top-0 -z-[3]" alt="" />
 				</span>
@@ -101,6 +101,44 @@
 			</p>
 		</section>
 	</div>
+</div>
+<div class="relative flex h-screen w-full flex-col items-center justify-center gap-20 md:hidden">
+	<section id="illustrations-container">
+		<img
+			class="absolute bottom-0 left-0 w-full"
+			src="/assets/Mobile homepage illustration.svg"
+			alt="A simple illustration with no practical function, used for aesthetics"
+		/>
+	</section>
+
+	<section class="flex flex-col items-center justify-center gap-3">
+		<!-- <div class="flex w-full items-center justify-center"> -->
+		<h1 class="font-montserrat text-[32px] font-bold text-primary-main_text-grey">
+			Need <span class="relative z-10 max-w-fit text-primary-main-blue">
+				resources <img src="/assets/Vector 2.svg" class="absolute -top-12 right-10" alt="" />
+			</span>
+			to <br />
+			kickstart your <br /> learning journey?
+		</h1>
+		<!-- </div> -->
+		<p class="text-center font-montserrat font-medium text-primary-main_text-grey">
+			Learn better with AI.
+		</p>
+	</section>
+
+	<button
+		disabled={loading}
+		on:click={handleGoogleAuth}
+		class="bg-[rgba(255, 255, 255, 1)] flex w-full max-w-fit items-center justify-center gap-2 rounded-[20px] border border-primary-main-green px-6 py-3"
+	>
+		{#if !loading}
+			<img src="assets/Google icon(no border).svg" alt="Google's logo" />
+			<span class="font-lato font-bold text-primary-main_text-grey">Continue with Google</span>
+		{:else}
+			<iconify-icon width="25" class="text-primary-main-yellow" icon="line-md:loading-twotone-loop"
+			></iconify-icon>
+		{/if}
+	</button>
 </div>
 
 <style>

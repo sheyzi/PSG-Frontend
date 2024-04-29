@@ -6,7 +6,7 @@
 </script>
 
 <div
-	class="max-h-auto relative flex h-[90vh] w-[283px] flex-col items-center gap-16 border-r bg-[#FFFFFF] py-10 xl:w-[285px]"
+	class="max-h-auto relative hidden h-[90vh] w-[283px] flex-col items-center gap-16 border-r bg-[#FFFFFF] py-10 md:flex xl:w-[285px]"
 >
 	<div class="absolute flex h-full w-full items-center justify-center">
 		<button

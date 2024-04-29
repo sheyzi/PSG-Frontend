@@ -1,7 +1,7 @@
 <script lang="ts">
 </script>
 
-<div class="sticky top-0 z-50 h-20 bg-white shadow">
+<div class="sticky top-0 z-50 hidden h-20 bg-white shadow md:block">
 	<nav class="relative flex h-full w-full items-center gap-16 px-3">
 		<section
 			class="flex h-full w-[268px] items-center gap-2 border-r pr-2 text-xs xl:min-w-fit xl:text-sm"

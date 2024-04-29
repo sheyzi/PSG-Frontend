@@ -28,7 +28,7 @@
 		<TopNavbar />
 		<section class="flex">
 			<SideNavbar {currentUser} />
-			<div class="bg-secondary-background ml-9 w-screen">
+			<div class="min-h-screen w-screen bg-secondary-background md:ml-9">
 				<slot />
 			</div>
 		</section>
