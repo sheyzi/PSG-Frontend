@@ -28,6 +28,7 @@ const config = {
 						blue: '#1A73E8',
 						red: '#DD3428'
 					},
+					grey: '#656565',
 					main_text: {
 						grey: '#303030',
 						white: '#F9F9F9'
@@ -40,7 +41,11 @@ const config = {
 						'light-blue': '#C3E8FA',
 						'pale-blue': '#EAF1FB'
 					},
+					background: '#F0F0F0',
 					foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)'
+				},
+				text: {
+					headings: '#000125'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
@@ -73,6 +78,9 @@ const config = {
 				montserrat: ['Montserrat', ...fontFamily.sans],
 				lato: ['Lato', ...fontFamily.sans],
 				poppins: ['Poppins', ...fontFamily.sans]
+			},
+			boxShadow: {
+				secondary: ' 0px 0px 4px 0px #999FFF'
 			}
 		}
 	}

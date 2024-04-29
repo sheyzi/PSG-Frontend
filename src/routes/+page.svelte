@@ -3,13 +3,13 @@
 	import { firebaseAuth } from '$lib/firebase';
 	import { showToast } from '$lib/utils';
 	import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-	import { onMount } from 'svelte';
 
 	let loading = false;
 
 	const handleGoogleAuth = async () => {
 		loading = true;
 		const provider = new GoogleAuthProvider();
+		console.log(firebaseAuth);
 
 		try {
 			await signInWithPopup(firebaseAuth, provider);
@@ -22,6 +22,9 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Home - PSG AI</title>
+</svelte:head>
 <div class="grid h-screen w-full grid-cols-5">
 	<div class="col-span-2 h-full w-full p-6">
 		<section class="flex max-w-fit items-center gap-2.5 border-r-2 px-2 py-3.5">

@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { Toaster } from 'svelte-sonner';
 
+	console.log(firebaseAuth.currentUser);
 	onMount(() => {
 		firebaseAuth.onAuthStateChanged(async (user) => {
 			if ($page.url.pathname.startsWith('/app') && !user) {
