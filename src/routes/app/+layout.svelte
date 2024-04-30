@@ -9,14 +9,15 @@
 	import { navigating } from '$app/stores';
 	import Loader from '$lib/components/Loader.svelte';
 
+	let currentUser: User | null;
 	let page_loaded = false;
+	let sideNavState = true;
 
 	const isLoggedIn = async () => {
 		if (!firebaseAuth.currentUser) {
 			await goto('/');
 		}
 	};
-	let currentUser: User | null;
 
 	onMount(async () => {
 		isLoggedIn().then(() => {
@@ -34,9 +35,17 @@
 	<div class="relative flex flex-col bg-background">
 		<TopNavbar />
 		<section class="flex">
-			<SideNavbar {currentUser} />
+			<SideNavbar
+				on:close={() => (sideNavState = false)}
+				on:open={() => (sideNavState = true)}
+				{currentUser}
+			/>
 			<MobileNav />
-			<div class="min-h-screen w-screen bg-secondary-background md:ml-9">
+			<div
+				class="no-scrollbar {sideNavState
+					? 'ml-64'
+					: 'ml-32'} max-h-screen w-screen overflow-y-scroll bg-secondary-background transition-all"
+			>
 				<slot />
 			</div>
 		</section>

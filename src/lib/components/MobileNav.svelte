@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { addCourseModalState } from '$lib/stores/store';
 
 	const updateModalState = () => {
@@ -6,12 +7,18 @@
 	};
 </script>
 
-<nav class="absolute bottom-0 h-28 w-full bg-[#F3F4F9A] shadow shadow-[#00000040] md:hidden">
-	<ul class="mx-auto flex h-full w-full max-w-xs items-center justify-between px-5">
+<nav class="fixed bottom-0 z-50 h-28 w-full bg-white shadow shadow-[#00000040] md:hidden">
+	<ul class="mx-auto flex h-full w-full max-w-xs items-center justify-between bg-white px-5">
 		<li>
 			<a href="/app" class="flex flex-col items-center justify-center space-y-2">
-				<img src="assets/Menu stroked.svg" class="h-5 w-5" alt="menu icon" />
-				<span class="text-sm">Courses</span>
+				<img
+					src="assets/{$page.url.pathname === '/app' ? 'Menu stroked(active)' : 'Menu stroked'}.svg"
+					class="h-5 w-5"
+					alt="menu icon"
+				/>
+				<span class="text-sm {$page.url.pathname === '/app' && 'text-primary-main-blue'} "
+					>Courses</span
+				>
 			</a>
 		</li>
 		<button

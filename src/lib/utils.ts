@@ -103,13 +103,24 @@ export const showToast = (message: string, type: ToastType, promise?: any) => {
 	}
 };
 
-export const slugify = (title: string) => {
+export const slugify = (title: string, titleCode?: string) => {
 	const date = new Date();
-	title = title + ' ' + date.getSeconds() + ' ' + date.getMilliseconds();
+	title =
+		title + ' ' + `${titleCode ? titleCode : 'PSG'}` + date.getSeconds() + date.getMilliseconds();
 	return title
 		.toLowerCase()
 		.replace(/\s+/g, '-') // Replace spaces with -
 		.replace(/[^\w\-]+/g, '') // Remove non-word chars
 		.replace(/\-\-+/g, '-') // Replace multiple - with single -
 		.trim();
+};
+
+export const topicLoop = (topics: any[]) => {
+	topics.forEach((topic) => {
+		console.log(topic.name);
+
+		if (topic.subtopics.length > 0) {
+			topicLoop(topic.subtopics);
+		}
+	});
 };

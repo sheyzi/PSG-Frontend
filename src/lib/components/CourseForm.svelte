@@ -10,13 +10,26 @@
 	import { axiosClient } from '$lib/axios';
 	import { showToast, slugify } from '$lib/utils';
 	import { ZodError, z } from 'zod';
-	import Loader from './Loader.svelte';
 	import { addCourseModalState } from '$lib/stores/store';
 	import { createEventDispatcher } from 'svelte';
+	import type { RawTopic } from '$lib/types/types';
 
 	export let className: string = '';
 
+	let files;
 	let validationErrors = {};
+	let loading = false;
+	let data: { [key: string]: string | any } = {
+		course_title: '',
+		course_code: '',
+		course_desc: '',
+		syllabus: {}
+	};
+	let loadingFile = false;
+
+	const isDesktop = mediaQuery('(min-width: 768px)');
+	const dispatch = createEventDispatcher();
+
 	const courseSchema = z.object({
 		course_title: z
 			.string({ required_error: 'Course title is required' })
@@ -31,22 +44,33 @@
 		course_syllabus: z.string().optional()
 	});
 
-	const dispatch = createEventDispatcher();
+	const addTopics = async (topics: RawTopic[], courseId: string, parentTopicId?: string) => {
+		for (const topic of topics) {
+			const topicDocRef = await addDoc(collection(fireStoreDb, 'topics'), {
+				name: topic.name,
+				courseId: courseId,
+				...(parentTopicId && { parentTopicId })
+			});
+			if (topic.subtopics?.length > 0) {
+				const subtopics = topic.subtopics;
+				addTopics(subtopics, courseId, topicDocRef.id);
+			}
+		}
+	};
 
-	let loading = false;
 	const handleSubmit = async () => {
 		loading = true;
 		dispatch('loading');
 		try {
 			courseSchema.parse(data);
-			const docRef = await addDoc(collection(fireStoreDb, 'courses'), {
+			const courseDocRef = await addDoc(collection(fireStoreDb, 'courses'), {
 				course_title: data.course_title,
 				course_code: data.course_code,
 				course_desc: data.course_desc,
-				course_syllabus: data.syllabus,
 				userId: firebaseAuth.currentUser?.uid,
 				slug: slugify(data.course_title)
 			});
+			await addTopics(data.syllabus, courseDocRef.id);
 			showToast('Course added successfully', 'success');
 			addCourseModalState.set(false);
 		} catch (e) {
@@ -60,10 +84,6 @@
 			loading = false;
 		}
 	};
-
-	let files;
-
-	let loadingFile = false;
 
 	const uploadFile = async (files) => {
 		// console.log('hi');
@@ -93,8 +113,8 @@
 
 				const imageRes = await axiosClient.post('get-topic-from-syllabus-image', formData);
 				data.syllabus = imageRes.data;
+
 				showToast('Image processing complete', 'success');
-				console.log(data);
 			}
 		} catch (error) {
 			console.log('err', error);
@@ -102,14 +122,6 @@
 			loadingFile = false;
 		}
 	};
-
-	let data: { [key: string]: string | any } = {
-		course_title: '',
-		course_code: '',
-		course_desc: '',
-		syllabus: {}
-	};
-	const isDesktop = mediaQuery('(min-width: 768px)');
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class=" {className}">
