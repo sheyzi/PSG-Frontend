@@ -113,22 +113,31 @@
 	{#if !pageDataLoaded}
 		<Loader />
 	{:else if loadingContent}
-		<div class=" flex space-x-5 px-10">
-			<div>
-				<AnimatedBalls />
+		<div class=" flex flex-col space-y-5 px-4 py-10 lg:flex-row lg:space-x-5 lg:space-y-0 lg:px-10">
+			<div class="flex items-center gap-2 lg:flex-col">
+				<!-- <AnimatedBalls /> -->
+
+				<iconify-icon
+					width="50"
+					icon="line-md:loading-twotone-loop"
+					class=" text-primary-main-yellow/30"
+				></iconify-icon>
+				<h6 class="font-lato text-xl font-semibold text-primary-main-green/30 lg:hidden">
+					Generating topic content...
+				</h6>
 			</div>
 			<div class="w-full space-y-2">
 				<Skeleton
-					class="h-4 w-[90%] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30"
+					class="h-6 w-[95] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
 				/>
 				<Skeleton
-					class="h-4 w-[90%] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30"
+					class="h-6 w-[92] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
 				/>
 				<Skeleton
-					class="h-4 w-[85%] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30"
+					class="h-6 w-[88] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[85%]"
 				/>
 				<Skeleton
-					class="h-4 w-[80%] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30"
+					class="h-6 w-[85] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[80%]"
 				/>
 				<Skeleton class="h-4 w-[200px]" />
 			</div>
@@ -155,36 +164,38 @@
 				</div>
 				<div class="space-y-5 p-5">
 					{#if topic}
-						{#each topic.resources.reverse() as resource}
-							<Card.Root
-								class="flex  flex-col gap-5 rounded-lg bg-white px-2.5 py-4 shadow md:border-0 md:border-r-4 md:border-r-secondary-supporting-light-blue"
-							>
-								<Card.Content
-									class="flex flex-col gap-2 rounded-lg  px-2.5 py-3 font-lato text-primary-main_text-grey shadow-none"
+						{#if topic.resources}
+							{#each topic.resources.reverse() as resource}
+								<Card.Root
+									class="flex  flex-col gap-5 rounded-lg bg-white px-2.5 py-4 shadow md:border-0 md:border-r-4 md:border-r-secondary-supporting-light-blue"
 								>
-									<!-- <span class="text-xs font-semibold">Description</span> -->
+									<Card.Content
+										class="flex flex-col gap-2 rounded-lg  px-2.5 py-3 font-lato text-primary-main_text-grey shadow-none"
+									>
+										<!-- <span class="text-xs font-semibold">Description</span> -->
 
-									{#if resource.url.includes('youtube.com')}
-										<iframe
-											class="w-full rounded"
-											src={getYoutubeEmbedUrl(resource.url)}
-											title="YouTube video player"
-											frameborder="0"
-											allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-											allowfullscreen
-										>
-										</iframe>
-									{:else}
-										<a
-											href={resource.url}
-											class="line-clamp-4 text-sm underline hover:font-semibold"
-											>{resource.content}</a
-										>
-									{/if}
-								</Card.Content>
-								<!-- {/if} -->
-							</Card.Root>
-						{/each}
+										{#if resource.url.includes('youtube.com')}
+											<iframe
+												class="w-full rounded"
+												src={getYoutubeEmbedUrl(resource.url)}
+												title="YouTube video player"
+												frameborder="0"
+												allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+												allowfullscreen
+											>
+											</iframe>
+										{:else}
+											<a
+												href={resource.url}
+												class="line-clamp-4 text-sm underline hover:font-semibold"
+												>{resource.content}</a
+											>
+										{/if}
+									</Card.Content>
+									<!-- {/if} -->
+								</Card.Root>
+							{/each}
+						{/if}
 					{/if}
 				</div>
 			</aside>
