@@ -46,7 +46,7 @@
 <svelte:head>
 	<title>All Courses - PSG AI</title>
 </svelte:head>
-<div class="h-full w-full py-10">
+<div class="h-screen w-screen py-10">
 	<section class=" px-8">
 		<h1 class="mb-5 font-lato text-[32px] text-primary-main_text-grey">All Courses</h1>
 
@@ -146,14 +146,14 @@
 		<Drawer.Trigger asChild let:builder>
 			<!-- <Button variant="outline" builders={[builder]}>Edit Profile</Button> -->
 		</Drawer.Trigger>
-		<Drawer.Content class="bg-white pb-2">
+		<Drawer.Content class="max-h-[80vh] bg-white pb-2">
 			<Drawer.Header class="py-5 text-left">
 				<Drawer.Title>Add Course</Drawer.Title>
 				<Drawer.Description>
 					Enter your course details. Click save when you're done.
 				</Drawer.Description>
 			</Drawer.Header>
-			<section class="no-scrollbar h-full max-h-[80vh] overflow-y-scroll">
+			<section class="no-scrollbar h-full overflow-y-scroll">
 				<CourseForm
 					on:loading={() => (loading = true)}
 					on:stopped={() => (loading = false)}
