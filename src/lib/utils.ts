@@ -102,3 +102,14 @@ export const showToast = (message: string, type: ToastType, promise?: any) => {
 		}
 	}
 };
+
+export const slugify = (title: string) => {
+	const date = new Date();
+	title = title + ' ' + date.getSeconds() + ' ' + date.getMilliseconds();
+	return title
+		.toLowerCase()
+		.replace(/\s+/g, '-') // Replace spaces with -
+		.replace(/[^\w\-]+/g, '') // Remove non-word chars
+		.replace(/\-\-+/g, '-') // Replace multiple - with single -
+		.trim();
+};
