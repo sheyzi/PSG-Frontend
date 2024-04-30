@@ -43,8 +43,8 @@
 			<MobileNav />
 			<div
 				class="no-scrollbar {sideNavState
-					? 'ml-64'
-					: 'ml-32'} max-h-screen w-screen overflow-y-scroll bg-secondary-background transition-all"
+					? 'lg:ml-64'
+					: 'lg:ml-32'} max-h-screen w-screen overflow-y-scroll bg-secondary-background transition-all"
 			>
 				<slot />
 			</div>
