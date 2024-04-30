@@ -10,7 +10,7 @@
 	import { axiosClient } from '$lib/axios';
 	import { showToast, slugify } from '$lib/utils';
 	import { ZodError, z } from 'zod';
-	import { addCourseModalState } from '$lib/stores/store';
+	import { addCourseModalState, courses } from '$lib/stores/store';
 	import { createEventDispatcher } from 'svelte';
 	import type { RawTopic } from '$lib/types/types';
 
@@ -35,11 +35,7 @@
 			.string({ required_error: 'Course title is required' })
 			.trim()
 			.min(3, 'Course title is too short'),
-		course_code: z
-			.string({ required_error: 'Course code is required' })
-			.min(3, 'Course code should be longer')
-			.trim()
-			.optional(),
+		course_code: z.string().min(3, 'Course code should be longer').trim().optional(),
 		course_desc: z.string().optional(), // Description can be optional
 		course_syllabus: z.string().optional()
 	});
@@ -63,14 +59,24 @@
 		dispatch('loading');
 		try {
 			courseSchema.parse(data);
-			const courseDocRef = await addDoc(collection(fireStoreDb, 'courses'), {
+			let courseData = {
 				course_title: data.course_title,
 				course_code: data.course_code,
 				course_desc: data.course_desc,
-				userId: firebaseAuth.currentUser?.uid,
+				userId: firebaseAuth.currentUser?.uid || '',
 				slug: slugify(data.course_title)
-			});
+			};
+			const courseDocRef = await addDoc(collection(fireStoreDb, 'courses'), courseData);
 			await addTopics(data.syllabus, courseDocRef.id);
+			courses.update((old_courses) => {
+				return [
+					...old_courses,
+					{
+						...courseData,
+						id: courseDocRef.id
+					}
+				];
+			});
 			showToast('Course added successfully', 'success');
 			addCourseModalState.set(false);
 		} catch (e) {

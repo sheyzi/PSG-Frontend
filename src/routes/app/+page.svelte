@@ -5,11 +5,10 @@
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import * as Card from '$lib/components/ui/card';
 	import { collection, getDocs, query, where } from 'firebase/firestore';
-	import { Courses, addCourseModalState } from '$lib/stores/store';
+	import { courses, addCourseModalState } from '$lib/stores/store';
 	import CourseForm from '$lib/components/CourseForm.svelte';
 	import Loader from '$lib/components/Loader.svelte';
-	import type { Course } from '$lib/types/types';
-	import { createEventDispatcher } from 'svelte';
+	import type { Course, RawCourse } from '$lib/types/types';
 
 	let open = false;
 
@@ -20,25 +19,20 @@
 	let loading = false;
 
 	const getAllCourses = async () => {
-		const courses = query(
+		const course_query = query(
 			collection(fireStoreDb, 'courses'),
 			where('userId', '==', firebaseAuth.currentUser?.uid)
 		);
-		let courseSnapShot = await getDocs(courses);
-		let allCourses: Course[] = [];
+		let courseSnapShot = await getDocs(course_query);
+		let allCourses: RawCourse[] = [];
 		courseSnapShot.forEach((course) => {
 			// console.log(`${course.id} => `, course.data());
-			let currCourse = course.data();
-			console.log(currCourse.slug);
+			let currCourse = course.data() as RawCourse;
 
-			$Courses = $Courses.filter((course) => {
-				console.log('course', course.slug);
-
-				return course.slug !== currCourse.slug;
-			});
 			allCourses = [...allCourses, currCourse];
 		});
-		$Courses = allCourses;
+
+		courses.set(allCourses);
 	};
 	getAllCourses();
 </script>
@@ -61,14 +55,14 @@
 		</div>
 	</section>
 
-	{#if $Courses.length > 0}
+	{#if $courses.length > 0}
 		<section
-			class="no-scrollbar mt-5 flex max-h-full w-full flex-col gap-6 overflow-scroll bg-white px-8 py-10 md:w-3/5 md:bg-inherit"
+			class="no-scrollbar mt-5 flex min-h-full w-full flex-col gap-6 overflow-scroll bg-white px-8 py-10 md:w-3/5 md:bg-inherit"
 		>
-			{#each $Courses as course}
+			{#each $courses as course}
 				<div>
 					<Card.Root
-						class="flex min-h-56 flex-col gap-5 rounded-lg bg-white px-2.5 py-4 shadow md:border-0 md:border-l-4 md:border-l-primary-main-yellow"
+						class="flex  flex-col gap-5 rounded-lg bg-white px-2.5 py-4 shadow md:border-0 md:border-l-4 md:border-l-primary-main-yellow"
 					>
 						<Card.Header
 							class="flex w-full flex-row items-center justify-between rounded-lg bg-secondary-supporting-pale-blue p-3 font-lato text-primary-main_text-grey shadow-secondary"
@@ -84,12 +78,14 @@
 								></iconify-icon>
 							</button>
 						</Card.Header>
-						<Card.Content
-							class="flex flex-col gap-2 rounded-lg border-2 border-primary-grey/5 px-2.5 py-3 font-lato text-primary-main_text-grey shadow-none"
-						>
-							<span class="text-xs font-semibold">Description</span>
-							<p class="line-clamp-4 text-sm">{course.course_desc}</p>
-						</Card.Content>
+						{#if course.course_desc && course.course_desc.length > 0}
+							<Card.Content
+								class="flex flex-col gap-2 rounded-lg border-2 border-primary-grey/5 px-2.5 py-3 font-lato text-primary-main_text-grey shadow-none"
+							>
+								<span class="text-xs font-semibold">Description</span>
+								<p class="line-clamp-4 text-sm">{course.course_desc}</p>
+							</Card.Content>
+						{/if}
 					</Card.Root>
 				</div>
 			{/each}

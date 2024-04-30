@@ -9,11 +9,14 @@ export type Topic = {
 	parentTopicId?: string;
 };
 
-export type Course = {
+export interface RawCourse {
 	course_title: string;
 	course_code?: string;
 	course_desc?: string;
 	userId: string;
 	slug: string;
+}
+
+export interface Course extends RawCourse {
 	topics: Topic[];
-};
+}
