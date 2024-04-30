@@ -219,19 +219,19 @@
 				</div>
 			{:else if files?.length > 0}
 				<div class="flex w-full items-center justify-between px-6">
-					<div class="grid gap-2">
+					<div class="grid gap-2 text-xs">
 						<p>{files[0].name}</p>
 						<span class="font-lato text-sm text-[#666666]"
 							>{(files[0].size / (1024 * 1024)).toFixed(2)}MB
 						</span>
 					</div>
 					<button
-						class="rounded-[15px] border-2 border-primary-main-blue px-4 py-2 font-poppins font-medium text-primary-main-blue"
+						class="rounded-[15px] border-2 border-primary-main-blue px-4 py-2 font-poppins text-xs font-medium text-primary-main-blue"
 						>Change</button
 					>
 				</div>
 			{:else}
-				<img src="assets/File Icon.svg" alt="file icon" />
+				<img src="/assets/File Icon.svg" alt="file icon" />
 				<h6 class="mt-1 font-lato text-sm">Browse files</h6>
 				<span class="text-xs text-[#666666]">Max size 1MB</span>
 				<span class="text-xs text-[#666666]">File format supported (DOC, PDF, JPG, PNG)</span>
@@ -240,7 +240,7 @@
 	</div>
 
 	<div class="flex items-center gap-1.5">
-		<img src="assets/Info Icon.svg" alt="information icon" />
+		<img src="/assets/Info Icon.svg" alt="information icon" />
 		<span class="font-lato text-xs text-[#656565] underline"
 			>Click for more info about uploading files</span
 		>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { firebaseAuth } from '$lib/firebase';
+	import { currentUser } from '$lib/stores/store';
 	import { showToast } from '$lib/utils';
 	import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
@@ -12,6 +13,7 @@
 
 		try {
 			await signInWithPopup(firebaseAuth, provider);
+			currentUser.set(firebaseAuth.currentUser);
 		} catch (error) {
 			console.log(error);
 			showToast('Ooops... Something went wrong!', 'error');

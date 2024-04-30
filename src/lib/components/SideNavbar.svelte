@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { User } from 'firebase/auth';
 	import { createEventDispatcher } from 'svelte';
 	import { slide } from 'svelte/transition';
-
-	export let currentUser: User | null;
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import { firebaseAuth } from '$lib/firebase';
+	import { currentUser } from '$lib/stores/store';
 
 	export let open: boolean;
 
@@ -36,14 +36,14 @@
 	<div class="relative left-0 flex h-full w-full flex-col items-center gap-16 overflow-hidden">
 		<section class="flex items-center gap-2">
 			<div class="flex h-12 w-12 items-center justify-center">
-				{#if currentUser?.photoURL}
-					<img class="h-full w-full rounded-full" src={currentUser?.photoURL} alt="User profile" />
+				{#if $currentUser?.photoURL}
+					<img class="h-full w-full rounded-full" src={$currentUser?.photoURL} alt="User profile" />
 				{:else}
-					<span>{currentUser?.displayName?.charAt(0)}</span>
+					<span>{$currentUser?.displayName?.charAt(0)}</span>
 				{/if}
 			</div>
 			<p class="{!open && 'hidden'} font-lato font-semibold text-text-headings">
-				{currentUser?.displayName}
+				{$currentUser?.displayName}
 			</p>
 		</section>
 
@@ -95,14 +95,38 @@
 
 			<ul class="flex w-full flex-col gap-4">
 				<li class="w-full">
-					<a
-						class="flex w-full items-center {!open &&
-							'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
-						href="/app"
-					>
-						<img src="/assets/Person Icon.svg" alt="Person Icon" />
-						<span class=" {!open && 'hidden'} transition-all delay-200 duration-700">Profile</span>
-					</a>
+					<DropdownMenu.Root>
+						<DropdownMenu.Trigger class="w-full">
+							<div
+								class="flex w-full items-center {!open &&
+									'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
+							>
+								<img src="/assets/Person Icon.svg" alt="Person Icon" />
+								<span class=" {!open && 'hidden'} transition-all delay-200 duration-700"
+									>Profile</span
+								>
+							</div>
+						</DropdownMenu.Trigger>
+
+						<DropdownMenu.Content>
+							<DropdownMenu.Group>
+								<DropdownMenu.Item>
+									<button
+										on:click={() => {
+											firebaseAuth.signOut();
+											currentUser.set(null);
+										}}
+										class="flex items-center gap-1 text-primary-main_text-grey"
+									>
+										<iconify-icon icon="fluent:sign-out-20-filled" width="20" style="color: #989898"
+										></iconify-icon>
+										<span class="text-sm">Logout</span>
+									</button>
+								</DropdownMenu.Item>
+								<!-- <DropdownMenu.Separator /> -->
+							</DropdownMenu.Group>
+						</DropdownMenu.Content>
+					</DropdownMenu.Root>
 				</li>
 				<li class="w-full">
 					<a
