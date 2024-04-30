@@ -6,7 +6,7 @@
 
 	export let currentUser: User | null;
 
-	let open = true;
+	let open = false;
 
 	const dispatch = createEventDispatcher();
 </script>
