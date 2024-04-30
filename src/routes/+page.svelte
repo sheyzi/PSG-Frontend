@@ -9,7 +9,6 @@
 	const handleGoogleAuth = async () => {
 		loading = true;
 		const provider = new GoogleAuthProvider();
-		console.log(firebaseAuth);
 
 		try {
 			await signInWithPopup(firebaseAuth, provider);

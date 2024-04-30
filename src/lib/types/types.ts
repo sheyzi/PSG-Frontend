@@ -3,11 +3,24 @@ export interface RawTopic {
 	subtopics: RawTopic[];
 }
 
+export interface Resource {
+	url: string;
+	content?: string;
+}
+
 export interface Topic {
+	id?: string;
 	courseId: string;
 	name: string;
 	parentTopicId?: string;
 	subtopics?: Topic[];
+	note?: string;
+	resources: Resource[];
+}
+
+export interface RawTopicContent {
+	note: string;
+	resources: Resource[];
 }
 
 export interface RawCourse {

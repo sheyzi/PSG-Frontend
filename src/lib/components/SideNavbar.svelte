@@ -59,7 +59,8 @@
 			<ul class="flex w-full flex-col gap-4">
 				<li class="w-full">
 					<a
-						class="flex {$page.url.pathname === '/app' &&
+						class="flex {($page.url.pathname === '/app' ||
+							$page.url.pathname.startsWith('/app/course')) &&
 							'bg-secondary-supporting-light-blue'} w-full items-center {!open &&
 							'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
 						href="/"

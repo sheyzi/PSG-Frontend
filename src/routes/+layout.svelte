@@ -12,7 +12,7 @@
 	let userLoaded = false;
 
 	$: {
-		if (browser) {
+		if (browser && userLoaded) {
 			if ($page.url.pathname.startsWith('/app') && $currentUser == null) {
 				goto('/');
 			}

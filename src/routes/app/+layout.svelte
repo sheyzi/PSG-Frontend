@@ -48,7 +48,7 @@
 			<div
 				class="no-scrollbar {sideNavState
 					? 'md:ml-60'
-					: 'md:ml-28'} min-h-screen w-full overflow-y-scroll bg-secondary-background py-10 transition-all"
+					: 'md:ml-28'} min-h-screen w-full overflow-y-scroll bg-secondary-background pb-28 transition-all md:pb-0"
 			>
 				<slot />
 			</div>

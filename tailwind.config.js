@@ -83,7 +83,8 @@ const config = {
 				secondary: ' 0px 0px 4px 0px #999FFF'
 			}
 		}
-	}
+	},
+	plugins: [require('@tailwindcss/typography')]
 };
 
 export default config;

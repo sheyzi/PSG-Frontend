@@ -4,7 +4,6 @@
 	import * as Card from '$lib/components/ui/card';
 	import { collection, getDocs, query, where } from 'firebase/firestore';
 	import { courses, addCourseModalState } from '$lib/stores/store';
-	import Loader from '$lib/components/Loader.svelte';
 	import type { RawCourse } from '$lib/types/types';
 
 	const isDesktop = mediaQuery('(min-width: 768px)');
@@ -31,7 +30,7 @@
 <svelte:head>
 	<title>All Courses - PSG AI</title>
 </svelte:head>
-<div class="h-full w-full">
+<div class="h-full w-full py-10">
 	<section class=" px-8">
 		<h1 class="mb-5 font-lato text-[32px] text-primary-main_text-grey">All Courses</h1>
 
