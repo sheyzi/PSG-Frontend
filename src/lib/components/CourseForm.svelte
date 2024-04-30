@@ -31,11 +31,8 @@
 	const dispatch = createEventDispatcher();
 
 	const courseSchema = z.object({
-		course_title: z
-			.string({ required_error: 'Course title is required' })
-			.trim()
-			.min(3, 'Course title is too short'),
-		course_code: z.string().min(3, 'Course code should be longer').trim().optional(),
+		course_title: z.string({ required_error: 'Course title is required' }).trim(),
+		course_code: z.string().trim().optional(),
 		course_desc: z.string().optional(), // Description can be optional
 		course_syllabus: z.string().optional()
 	});

@@ -6,7 +6,7 @@
 
 	export let currentUser: User | null;
 
-	let open = false;
+	export let open: boolean;
 
 	const dispatch = createEventDispatcher();
 </script>
@@ -30,7 +30,7 @@
 			}}
 			class=" absolute -right-5 z-30 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-[#EFF0FF] bg-white shadow"
 		>
-			<img src="assets/Left vector.svg" class="" alt="Left facing arrowhead" />
+			<img src="/assets/Left vector.svg" class="" alt="Left facing arrowhead" />
 		</button>
 	</div>
 	<div class="relative left-0 flex h-full w-full flex-col items-center gap-16 overflow-hidden">
@@ -64,7 +64,7 @@
 							'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
 						href="/"
 					>
-						<img src="assets/Notes Icon.svg" alt="notes icon" />
+						<img src="/assets/Notes Icon.svg" alt="notes icon" />
 						<span class="{!open && 'hidden'} transition-all delay-200 duration-700"
 							>All Courses</span
 						>
@@ -76,7 +76,7 @@
 							'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
 						href="/"
 					>
-						<img src="assets/Calendar With Clock Icon.svg" alt="Calendar With Clock Icon" />
+						<img src="/assets/Calendar With Clock Icon.svg" alt="Calendar With Clock Icon" />
 						<span class="  {!open && 'hidden'} transition-all duration-700">My Learning Cale..</span
 						>
 					</a>
@@ -99,7 +99,7 @@
 							'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
 						href="/app"
 					>
-						<img src="assets/Person Icon.svg" alt="Person Icon" />
+						<img src="/assets/Person Icon.svg" alt="Person Icon" />
 						<span class=" {!open && 'hidden'} transition-all delay-200 duration-700">Profile</span>
 					</a>
 				</li>
@@ -109,7 +109,7 @@
 							'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
 						href="/app"
 					>
-						<img src="assets/Settings Icon.svg" alt="Settings Icon" />
+						<img src="/assets/Settings Icon.svg" alt="Settings Icon" />
 						<span class=" {!open && 'hidden'} transition-all delay-200 duration-700">Settings</span>
 					</a>
 				</li>

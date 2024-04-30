@@ -12,7 +12,9 @@
 		<li>
 			<a href="/app" class="flex flex-col items-center justify-center space-y-2">
 				<img
-					src="assets/{$page.url.pathname === '/app' ? 'Menu stroked(active)' : 'Menu stroked'}.svg"
+					src="/assets/{$page.url.pathname === '/app'
+						? 'Menu stroked(active)'
+						: 'Menu stroked'}.svg"
 					class="h-5 w-5"
 					alt="menu icon"
 				/>
@@ -25,12 +27,12 @@
 			class="flex h-[73px] w-[73px] items-center justify-center rounded-full border-4 border-white bg-primary-main-green shadow"
 			on:click={updateModalState}
 		>
-			<img src="assets/ic_round-add.svg" alt="add icon" />
+			<img src="/assets/ic_round-add.svg" alt="add icon" />
 			<span class="sr-only">Add course</span>
 		</button>
 		<li>
 			<a href="/" class="flex flex-col items-center justify-center space-y-2">
-				<img src="assets/profiled stroked.svg" class="h-5 w-5" alt="menu icon" />
+				<img src="/assets/profiled stroked.svg" class="h-5 w-5" alt="menu icon" />
 				<span class="font-lato text-sm">Profile</span>
 			</a>
 		</li>

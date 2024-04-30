@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { addCourseModalState } from '$lib/stores/store';
 </script>
 
 <div class="sticky top-0 z-50 hidden h-20 bg-white shadow md:block">
@@ -12,7 +13,7 @@
 		<section class="flex h-full w-full items-center justify-between">
 			<div class="flex items-center gap-1">
 				<img
-					src="assets/Search Icon.svg"
+					src="/assets/Search Icon.svg"
 					class="h-7"
 					alt="a magnifying glass to illustrate searching"
 				/>
@@ -28,16 +29,17 @@
 					disabled
 					class="flex items-center gap-2 font-lato text-sm font-bold text-primary-main_text-grey"
 				>
-					<img src="assets/Play icon.svg" alt="play icon" />
+					<img src="/assets/Play icon.svg" alt="play icon" />
 					<span>Tutorial</span>
 				</button>
 				<button class="flex h-12 w-12 items-center justify-center rounded-full bg-[#EEEEEE]"
-					><img class="" src="assets/Bell icon.svg" alt="bell icon" /></button
+					><img class="" src="/assets/Bell icon.svg" alt="bell icon" /></button
 				>
 				<button
+					on:click={() => addCourseModalState.set(true)}
 					class="flex min-w-[150px] items-center gap-2 rounded-[25px] bg-primary-main-green px-4 font-lato text-sm font-bold text-primary-main_text-white"
 				>
-					<img src="assets/Add course icon.svg" alt="add course" />
+					<img src="/assets/Add course icon.svg" alt="add course" />
 					<span>Add New Course</span>
 				</button>
 			</div>

@@ -8,6 +8,14 @@
 	import { onMount } from 'svelte';
 	import { navigating } from '$app/stores';
 	import Loader from '$lib/components/Loader.svelte';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import CourseForm from '$lib/components/CourseForm.svelte';
+	import { addCourseModalState } from '$lib/stores/store';
+
+	let loading = false;
+	let open = false;
+
+	$: open = $addCourseModalState;
 
 	let currentUser: User | null;
 	let page_loaded = false;
@@ -35,24 +43,44 @@
 	<div class="relative flex flex-col bg-background">
 		<TopNavbar />
 		<section class="flex">
-			<SideNavbar
-				on:close={() => (sideNavState = false)}
-				on:open={() => (sideNavState = true)}
-				{currentUser}
-			/>
+			<SideNavbar bind:open={sideNavState} {currentUser} />
 			<MobileNav />
 			<div
 				class="no-scrollbar {sideNavState
-					? 'lg:ml-64'
-					: 'lg:ml-32'} max-h-screen w-screen overflow-y-scroll bg-secondary-background transition-all"
+					? 'md:ml-60'
+					: 'md:ml-28'} min-h-screen w-full overflow-y-scroll bg-secondary-background py-10 transition-all"
 			>
 				<slot />
 			</div>
 		</section>
 	</div>
+	<Dialog.Root onOpenChange={(e) => addCourseModalState.set(e)} bind:open>
+		<Dialog.Trigger asChild let:builder>
+			<!-- <Button variant="outline" builders={[builder]}>Add Course</Button> -->
+		</Dialog.Trigger>
+		<Dialog.Content
+			class="no-scrollbar  max-h-[500px] overflow-y-scroll border-0 border-t-4 border-primary-main-yellow bg-white px-0 py-0 pb-5 sm:max-w-[425px] "
+		>
+			<Dialog.Header class="sticky top-0 z-10  bg-white p-5 shadow">
+				<Dialog.Title>Add Course</Dialog.Title>
+				<Dialog.Description>
+					Enter your course details. Click save when you're done.
+				</Dialog.Description>
+			</Dialog.Header>
+			<CourseForm
+				on:loading={() => (loading = true)}
+				on:stopped={() => (loading = false)}
+				className="grid items-start gap-5 px-6"
+			/>
+		</Dialog.Content>
+	</Dialog.Root>
 {:else}
 	<div class="flex h-screen w-screen items-center justify-center">
 		<iconify-icon icon="line-md:loading-twotone-loop" class="text-primary-main-yellow" width="35"
 		></iconify-icon>
 	</div>
+{/if}
+
+{#if loading}
+	<Loader />
 {/if}

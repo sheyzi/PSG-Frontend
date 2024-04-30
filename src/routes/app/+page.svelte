@@ -1,22 +1,13 @@
 <script lang="ts">
 	import { fireStoreDb, firebaseAuth } from '$lib/firebase';
 	import { mediaQuery } from 'svelte-legos';
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import * as Card from '$lib/components/ui/card';
 	import { collection, getDocs, query, where } from 'firebase/firestore';
 	import { courses, addCourseModalState } from '$lib/stores/store';
-	import CourseForm from '$lib/components/CourseForm.svelte';
 	import Loader from '$lib/components/Loader.svelte';
-	import type { Course, RawCourse } from '$lib/types/types';
-
-	let open = false;
-
-	$: open = $addCourseModalState;
+	import type { RawCourse } from '$lib/types/types';
 
 	const isDesktop = mediaQuery('(min-width: 768px)');
-
-	let loading = false;
 
 	const getAllCourses = async () => {
 		const course_query = query(
@@ -40,7 +31,7 @@
 <svelte:head>
 	<title>All Courses - PSG AI</title>
 </svelte:head>
-<div class="h-screen w-screen py-10">
+<div class="h-full w-full">
 	<section class=" px-8">
 		<h1 class="mb-5 font-lato text-[32px] text-primary-main_text-grey">All Courses</h1>
 
@@ -71,7 +62,11 @@
 								<Card.Description class="text-xs text-primary-main_text-grey"
 									>Course</Card.Description
 								>
-								<Card.Title class="font-semibold">{course.course_title}</Card.Title>
+								<Card.Title class="font-semibold">
+									<a href="/app/course/{course.slug}">
+										{course.course_title}
+									</a>
+								</Card.Title>
 							</section>
 							<button>
 								<iconify-icon icon="entypo:dots-three-vertical" style="color: #989898"
@@ -116,31 +111,11 @@
 	Sign out
 </button> -->
 
-{#if $isDesktop}
-	<Dialog.Root onOpenChange={(e) => addCourseModalState.set(e)} bind:open>
-		<Dialog.Trigger asChild let:builder>
-			<!-- <Button variant="outline" builders={[builder]}>Add Course</Button> -->
-		</Dialog.Trigger>
-		<Dialog.Content
-			class="no-scrollbar max-h-[500px] overflow-y-scroll border-0 border-t-4 border-primary-main-yellow bg-white px-0 py-0 pb-5 sm:max-w-[425px]"
-		>
-			<Dialog.Header class="sticky top-0 z-10 w-full bg-white p-5 shadow">
-				<Dialog.Title>Add Course</Dialog.Title>
-				<Dialog.Description>
-					Enter your course details. Click save when you're done.
-				</Dialog.Description>
-			</Dialog.Header>
-			<CourseForm
-				on:loading={() => (loading = true)}
-				on:stopped={() => (loading = false)}
-				className="grid items-start gap-5 px-6"
-			/>
-		</Dialog.Content>
-	</Dialog.Root>
-{:else}
+<!-- {#if $isDesktop} -->
+
+<!-- {:else}
 	<Drawer.Root onClose={() => addCourseModalState.set(false)} bind:open>
 		<Drawer.Trigger asChild let:builder>
-			<!-- <Button variant="outline" builders={[builder]}>Edit Profile</Button> -->
 		</Drawer.Trigger>
 		<Drawer.Content class="max-h-[80vh] bg-white pb-2">
 			<Drawer.Header class="py-5 text-left">
@@ -158,8 +133,4 @@
 			</section>
 		</Drawer.Content>
 	</Drawer.Root>
-{/if}
-
-{#if loading}
-	<Loader />
-{/if}
+{/if} -->

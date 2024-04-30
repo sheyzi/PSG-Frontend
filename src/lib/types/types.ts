@@ -1,13 +1,14 @@
-export type RawTopic = {
+export interface RawTopic {
 	name: string;
 	subtopics: RawTopic[];
-};
+}
 
-export type Topic = {
+export interface Topic {
 	courseId: string;
 	name: string;
 	parentTopicId?: string;
-};
+	subtopics?: Topic[];
+}
 
 export interface RawCourse {
 	course_title: string;
@@ -18,5 +19,6 @@ export interface RawCourse {
 }
 
 export interface Course extends RawCourse {
-	topics: Topic[];
+	id?: string;
+	topics?: Topic[];
 }
