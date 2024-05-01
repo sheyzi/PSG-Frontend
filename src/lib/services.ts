@@ -1,5 +1,5 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import type { Course, Topic } from './types/types';
+import type { Course, RawCourse, Topic } from './types/types';
 import { fireStoreDb } from './firebase';
 
 export const structureTopics = (topics: Topic[]): Topic[] => {
@@ -57,5 +57,23 @@ export const getTopics = async (courseId: string, parentTopicId?: string) => {
 		topics = structureTopics(topics);
 
 		return topics;
+	}
+};
+
+export const getCourse = async (slug: string): Promise<Course | null> => {
+	const courseRef = collection(fireStoreDb, 'courses');
+	const q = query(courseRef, where('slug', '==', slug));
+	const courseSnapShot = await getDocs(q);
+
+	if (courseSnapShot.empty) {
+		return null;
+	} else {
+		const course = courseSnapShot.docs[0];
+		const topics = await getTopics(course.id);
+		return {
+			...(course.data() as RawCourse),
+			id: course.id,
+			topics
+		};
 	}
 };

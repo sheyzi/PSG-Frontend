@@ -6,12 +6,12 @@
 	import Loader from '$lib/components/Loader.svelte';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { fireStoreDb } from '$lib/firebase';
-	import type { RawTopicContent, Resource, Topic } from '$lib/types/types';
+	import type { Course, RawCourse, RawTopicContent, Resource, Topic } from '$lib/types/types';
 	import { showToast } from '$lib/utils';
 	import { doc, getDoc, getDocs, updateDoc, collection, query, where } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import * as Card from '$lib/components/ui/card';
-	import { getTopics } from '$lib/services';
+	import { getCourse, getTopics } from '$lib/services';
 
 	let topic_id = $page.params.topic_id;
 	let course_slug = $page.params.slug;
@@ -54,7 +54,7 @@
 		}
 	};
 
-	const getCourseContent = async (topic_name: string): Promise<RawTopicContent | null> => {
+	const getTopicContent = async (topic_name: string): Promise<RawTopicContent | null> => {
 		try {
 			const response = await axiosClient.get('/generate-topic-content', {
 				params: {
@@ -71,12 +71,13 @@
 
 	let topic: Topic | null;
 	let topics: Topic[] = [];
-	let parentTopic: Topic;
+	let parentTopic: Topic | null;
+	let course: Course;
 
 	const generateTopicContent = async (topic_name: string) => {
 		loadingContent = true;
 		try {
-			let topicContent = await getCourseContent(topic_name);
+			let topicContent = await getTopicContent(topic_name);
 			const updateTopicRef = doc(fireStoreDb, 'topics', topic_id);
 			let resources: Resource[] = [];
 
@@ -113,6 +114,14 @@
 				showToast(`This topic doesn't exist!`, 'error');
 				goto(`/app/course/${course_slug}`);
 			}
+
+			if (topic?.parentTopicId) {
+				parentTopic = await getTopic(topic?.parentTopicId || '');
+			} else {
+				parentTopic = null;
+			}
+
+			course = (await getCourse(course_slug)) as Course;
 		} finally {
 			pageDataLoaded = true;
 		}
@@ -226,18 +235,29 @@
 			</div>
 		</div>
 	{:else}
+		<section class="mb-2">
+			<a class="breadcrumb-item" href="/app/course/{course.slug}">{course.course_title} </a> >
+			{#if parentTopic}
+				<a class="breadcrumb-item" href="/app/course/{course.slug}/{parentTopic.id}"
+					>{parentTopic.name}
+				</a> >
+			{/if}
+			<a class="breadcrumb-item text-primary-main-blue" href="/app/course/{course.slug}/{topic?.id}"
+				>{topic?.name}
+			</a>
+		</section>
 		<div class="grid gap-5 lg:grid-cols-12">
 			<section
 				class="no-scrollbar relative h-full max-h-screen overflow-y-scroll rounded bg-white lg:col-span-8"
 			>
 				<div class="sticky top-0 flex w-full items-center justify-between border-b-2 bg-white p-5">
-					<h2 class="font-lato text-2xl font-bold text-primary-main_text-grey">
-						{topic?.parentTopicId ? 'Subtopic' : 'Topic'} : {topic?.name}
+					<h2 class="max-w-[70%] font-lato text-2xl font-bold text-primary-main_text-grey">
+						{topic?.name}
 					</h2>
 					<div>
 						<button
 							on:click={async () => await generateTopicContent(topic?.name || '')}
-							class="rounded-lg border-2 border-primary-main-green px-3 py-2"
+							class="rounded-full border-2 border-primary-main-green px-3 py-2 font-lato text-xs font-semibold"
 						>
 							Regenerate Topic
 						</button>

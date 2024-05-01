@@ -9,36 +9,18 @@
 	import { collection, getDocs, query, where } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import * as Card from '$lib/components/ui/card';
-	import { getTopics } from '$lib/services';
+	import { getCourse, getTopics } from '$lib/services';
 	import snarkdown from 'snarkdown';
 
 	const slug = $page.params.slug;
 
 	let course: Course | null;
 
-	const getCourse = async (): Promise<Course | null> => {
-		const courseRef = collection(fireStoreDb, 'courses');
-		const q = query(courseRef, where('slug', '==', slug));
-		const courseSnapShot = await getDocs(q);
-
-		if (courseSnapShot.empty) {
-			return null;
-		} else {
-			let course = courseSnapShot.docs[0];
-			let topics = await getTopics(course.id);
-			return {
-				...(course.data() as RawCourse),
-				id: course.id,
-				topics
-			};
-		}
-	};
-
 	let pageDataLoaded = false;
 
 	onMount(async () => {
 		try {
-			course = await getCourse();
+			course = await getCourse(slug);
 
 			if (!course) {
 				showToast(`Course with slug ${slug} doesn't exist`, 'error');
