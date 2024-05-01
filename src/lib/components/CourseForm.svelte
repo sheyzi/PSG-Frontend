@@ -13,6 +13,7 @@
 	import { addCourseModalState, courses } from '$lib/stores/store';
 	import { createEventDispatcher } from 'svelte';
 	import type { RawTopic } from '$lib/types/types';
+	import { AxiosError } from 'axios';
 
 	export let className: string = '';
 
@@ -31,10 +32,12 @@
 	const dispatch = createEventDispatcher();
 
 	const courseSchema = z.object({
-		course_title: z.string({ required_error: 'Course title is required' }).trim(),
+		course_title: z
+			.string({ required_error: 'Course title is required' })
+			.min(3, { message: 'Course title is too short' })
+			.trim(),
 		course_code: z.string().trim().optional(),
-		course_desc: z.string().optional(), // Description can be optional
-		course_syllabus: z.string().optional()
+		course_desc: z.string().optional() // Description can be optional
 	});
 
 	const addTopics = async (topics: RawTopic[], courseId: string, parentTopicId?: string) => {
@@ -56,6 +59,10 @@
 		dispatch('loading');
 		try {
 			courseSchema.parse(data);
+			if (data.syllabus === undefined) {
+				showToast('No syllabus was added', 'error');
+				return;
+			}
 			let courseData = {
 				course_title: data.course_title,
 				course_code: data.course_code,
@@ -79,6 +86,7 @@
 		} catch (e) {
 			if (e instanceof ZodError) {
 				validationErrors = e.flatten().fieldErrors;
+				showToast('Validation error', 'error');
 			} else {
 				console.error('Error adding document: ', e);
 			}
@@ -95,7 +103,7 @@
 
 		if (files.length < 1) {
 			// console.log('no files');
-			showToast('Please select an image', 'info');
+			showToast('Please select an image or file containing your syllabus', 'info');
 			return;
 		}
 		try {
@@ -104,9 +112,9 @@
 			if (fileToUpload.type === 'application/pdf' || fileToUpload.type === 'application/doc') {
 				formData.append('file', fileToUpload);
 
-				const pdfRes = await axiosClient.post('/get-topic-from-syllabus-pdf', {
-					formData
-				});
+				const pdfRes = await axiosClient.post('/get-topic-from-syllabus-pdf', formData);
+				data.syllabus = pdfRes.data;
+				showToast('File processing complete', 'success');
 			} else if (
 				fileToUpload.type === 'image/jpg' ||
 				fileToUpload.type === 'image/png' ||
@@ -121,6 +129,11 @@
 			}
 		} catch (error) {
 			console.log('err', error);
+
+			if (error instanceof AxiosError) {
+				showToast('Ooops something went wrong while processing your syllabus', 'error');
+				console.log('Axios error', error);
+			}
 		} finally {
 			loadingFile = false;
 		}

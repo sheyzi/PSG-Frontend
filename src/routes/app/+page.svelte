@@ -25,6 +25,8 @@
 		courses.set(allCourses);
 	};
 	getAllCourses();
+
+	$: console.log($courses);
 </script>
 
 <svelte:head>
