@@ -26,7 +26,7 @@
 	};
 	getAllCourses();
 
-	$: console.log($courses);
+	// $: console.log($courses);
 </script>
 
 <svelte:head>

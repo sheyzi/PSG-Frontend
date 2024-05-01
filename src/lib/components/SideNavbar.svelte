@@ -13,9 +13,7 @@
 
 <div
 	transition:slide={{ duration: 300 }}
-	class="fixed left-0 hidden flex-col {open
-		? 'w-[222px] xl:w-[250px]'
-		: 'w-[97px]'} h-[90vh] {!open &&
+	class="fixed left-0 hidden flex-col {open ? 'w-[222px] ' : 'w-[97px]'} h-[90vh] {!open &&
 		'hidden'}] items-center gap-16 border-r bg-[#FFFFFF] py-10 transition-all duration-500 md:flex"
 >
 	<div class="absolute flex h-full w-full items-center justify-center">
@@ -30,7 +28,9 @@
 			}}
 			class=" absolute -right-5 z-30 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-[#EFF0FF] bg-white shadow"
 		>
-			<img src="/assets/Left vector.svg" class="" alt="Left facing arrowhead" />
+			<!-- <img src="/assets/Left vector.svg" class="" alt="Left facing arrowhead" /> -->
+
+			<iconify-icon icon="ep:arrow-left-bold" rotate={!open && '90'} color="#000371"></iconify-icon>
 		</button>
 	</div>
 	<div class="relative left-0 flex h-full w-full flex-col items-center gap-16 overflow-hidden">

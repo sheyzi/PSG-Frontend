@@ -3,7 +3,6 @@
 	import snarkdown from 'snarkdown';
 	import { page } from '$app/stores';
 	import { axiosClient } from '$lib/axios';
-	import AnimatedBalls from '$lib/components/AnimatedBalls.svelte';
 	import Loader from '$lib/components/Loader.svelte';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { fireStoreDb } from '$lib/firebase';
@@ -17,6 +16,9 @@
 	let course_slug = $page.params.slug;
 	let pageDataLoaded = false;
 	let loadingContent = false;
+
+	$: topic_id = $page.params.topic_id;
+	$: course_slug = $page.params.slug;
 
 	const getTopic = async (topic_id: string): Promise<Topic | null> => {
 		const topicRef = doc(fireStoreDb, 'topics', topic_id);
@@ -51,8 +53,6 @@
 		}
 	};
 
-	$: console.log(topic);
-
 	const getCourseContent = async (topic_name: string): Promise<RawTopicContent | null> => {
 		try {
 			const response = await axiosClient.get('/generate-topic-content', {
@@ -70,15 +70,22 @@
 
 	let topic: Topic | null;
 
-	onMount(async () => {
-		topic = await getTopic(topic_id);
+	$: {
+	}
 
-		if (!topic) {
-			showToast(`This topic doesn't exist!`, 'error');
-			goto(`/app/course/${course_slug}`);
+	const loadContent = async (topic_id: string) => {
+		pageDataLoaded = false;
+
+		try {
+			topic = await getTopic(topic_id);
+
+			if (!topic) {
+				showToast(`This topic doesn't exist!`, 'error');
+				goto(`/app/course/${course_slug}`);
+			}
+		} finally {
+			pageDataLoaded = true;
 		}
-
-		pageDataLoaded = true;
 
 		if (!topic?.note) {
 			loadingContent = true;
@@ -109,6 +116,14 @@
 				loadingContent = false;
 			}
 		}
+	};
+
+	$: {
+		loadContent(topic_id);
+	}
+
+	onMount(async () => {
+		await loadContent(topic_id);
 	});
 
 	function extractVideoIdFromYouTubeUrl(url: string): string | null {
