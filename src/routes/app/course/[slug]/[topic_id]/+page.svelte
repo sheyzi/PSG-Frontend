@@ -170,20 +170,59 @@
 					Generating topic content...
 				</h6>
 			</div>
-			<div class="w-full space-y-2">
-				<Skeleton
-					class="h-6 w-[95] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
-				/>
-				<Skeleton
-					class="h-6 w-[92] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
-				/>
-				<Skeleton
-					class="h-6 w-[88] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[85%]"
-				/>
-				<Skeleton
-					class="h-6 w-[85] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[80%]"
-				/>
-				<Skeleton class="h-4 w-[200px]" />
+			<div class="w-full">
+				<div class="space-y-2">
+					<Skeleton
+						class="h-6 w-[95] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
+					/>
+					<Skeleton
+						class="h-6 w-[92] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
+					/>
+					<Skeleton
+						class="h-6 w-[88] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[85%]"
+					/>
+					<Skeleton
+						class="h-6 w-[85] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[80%]"
+					/>
+					<Skeleton class="h-4 w-[200px]" />
+				</div>
+				<div class="space-y-2">
+					<Skeleton
+						class="h-6 w-[95] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
+					/>
+					<Skeleton
+						class="h-6 w-[92] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
+					/>
+
+					<Skeleton
+						class="h-6 w-[92] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
+					/>
+					<Skeleton
+						class="h-6 w-[92] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
+					/>
+					<Skeleton
+						class="h-6 w-[88] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[85%]"
+					/>
+					<Skeleton
+						class="h-6 w-[85] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[80%]"
+					/>
+					<Skeleton class="h-4 w-[200px]" />
+				</div>
+				<div class="space-y-2">
+					<Skeleton
+						class="h-6 w-[95] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
+					/>
+					<Skeleton
+						class="h-6 w-[92] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[90%]"
+					/>
+					<Skeleton
+						class="h-6 w-[88] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[85%]"
+					/>
+					<Skeleton
+						class="h-6 w-[85] bg-gradient-to-r from-primary-main-yellow/30 to-primary-main-green/30 lg:h-4 lg:w-[80%]"
+					/>
+					<Skeleton class="h-4 w-[200px]" />
+				</div>
 			</div>
 		</div>
 	{:else}
