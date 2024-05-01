@@ -2,7 +2,7 @@
 	import { addCourseModalState } from '$lib/stores/store';
 </script>
 
-<div class="fixed top-0 z-50 hidden h-20 w-screen bg-white shadow md:block">
+<div class="fixed top-0 z-50 hidden h-20 w-screen bg-white shadow md:block md:pr-10">
 	<nav class="relative flex h-full w-full items-center gap-16 px-3">
 		<a
 			href="/app"
