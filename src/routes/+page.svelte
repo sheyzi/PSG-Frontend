@@ -26,14 +26,16 @@
 <svelte:head>
 	<title>Home - PSG AI</title>
 </svelte:head>
-<div class="hidden h-screen w-full grid-cols-5 md:grid">
-	<div class="col-span-2 h-full w-full p-6">
-		<section class="flex max-w-fit items-center gap-2.5 border-r-2 px-2 py-3.5">
+<div class="no-scrollbar hidden h-screen w-full grid-cols-5 md:grid">
+	<div class="relative col-span-2 h-full w-full p-6">
+		<section class="flex max-w-fit items-center gap-2.5 px-2 py-3.5">
 			<img src="/assets/PSG_LOGO.svg" alt="Personalized study guide logo" />
 			<h5 class="font-lato font-bold text-primary-main_text-grey">Personalized Study Guide</h5>
 		</section>
-		<section class="flex h-full w-full flex-col items-center justify-center gap-11">
-			<!-- <h3 class="font-lato text-3xl font-bold text-primary-main_text-grey">Let’s get started...</h3> -->
+		<section
+			class="absolute left-0 top-[50%] flex w-full flex-col items-center justify-center gap-8"
+		>
+			<h3 class="font-lato text-3xl font-bold text-primary-main_text-grey">Let’s get started...</h3>
 			<div class="flex w-full max-w-xs flex-col items-center gap-8">
 				<!-- <section class="flex w-full flex-col items-center space-y-3">
 					<button
@@ -55,10 +57,10 @@
 				<button
 					disabled={loading}
 					on:click={handleGoogleAuth}
-					class="bg-[rgba(255, 255, 255, 1)] google-button flex w-full max-w-fit items-center justify-center gap-2 rounded-[20px] px-6 py-3"
+					class="bg-[rgba(255, 255, 255, 1)] flex w-[80%] items-center justify-center gap-2 rounded-full border border-primary-main-green px-6 py-3 text-sm"
 				>
 					{#if !loading}
-						<img src="/assets/Google icon.svg" alt="Google's logo" />
+						<img src="/assets/Google icon(no border).svg" alt="Google's logo" />
 						<span class="font-lato font-bold text-primary-main_text-grey">Continue with Google</span
 						>
 					{:else}
@@ -69,6 +71,14 @@
 						></iconify-icon>
 					{/if}
 				</button>
+
+				<p class="font-lato text-xs">
+					Have an account? <button
+						disabled={loading}
+						on:click={handleGoogleAuth}
+						class="text-primary-main-blue underline">Sign in instead</button
+					>
+				</p>
 			</div>
 		</section>
 	</div>

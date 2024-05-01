@@ -34,25 +34,18 @@
 		</button>
 	</div>
 	<div class="relative left-0 flex h-full w-full flex-col items-center gap-16 overflow-hidden">
-		<div class="grid">
-			<!-- <p>Go back</p> -->
-			<section class="flex flex-col items-center gap-2">
-				<div class="flex h-12 w-12 items-center justify-center">
-					{#if $currentUser?.photoURL}
-						<img
-							class="h-full w-full rounded-full"
-							src={$currentUser?.photoURL}
-							alt="User profile"
-						/>
-					{:else}
-						<span>{$currentUser?.displayName?.charAt(0)}</span>
-					{/if}
-				</div>
-				<p class="{!open && 'hidden'} font-lato font-semibold text-text-headings">
-					{$currentUser?.displayName}
-				</p>
-			</section>
-		</div>
+		<section class="flex items-center gap-2">
+			<div class="flex h-12 w-12 items-center justify-center">
+				{#if $currentUser?.photoURL}
+					<img class="h-full w-full rounded-full" src={$currentUser?.photoURL} alt="User profile" />
+				{:else}
+					<span>{$currentUser?.displayName?.charAt(0)}</span>
+				{/if}
+			</div>
+			<p class="{!open && 'hidden'} font-lato font-semibold text-text-headings">
+				{$currentUser?.displayName}
+			</p>
+		</section>
 
 		<section class="flex w-full flex-col {open ? 'items-start' : 'items-center'} gap-5 px-5">
 			<h5

@@ -14,6 +14,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { RawTopic } from '$lib/types/types';
 	import { AxiosError } from 'axios';
+	import { goto } from '$app/navigation';
 
 	export let className: string = '';
 
@@ -82,6 +83,7 @@
 				];
 			});
 			showToast('Course added successfully', 'success');
+			goto('/app');
 			addCourseModalState.set(false);
 		} catch (e) {
 			if (e instanceof ZodError) {
