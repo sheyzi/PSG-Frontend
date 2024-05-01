@@ -11,6 +11,7 @@
 	import { doc, getDoc, getDocs, updateDoc, collection, query, where } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import * as Card from '$lib/components/ui/card';
+	import { getTopics } from '$lib/services';
 
 	let topic_id = $page.params.topic_id;
 	let course_slug = $page.params.slug;
@@ -69,9 +70,38 @@
 	};
 
 	let topic: Topic | null;
+	let topics: Topic[] = [];
+	let parentTopic: Topic;
 
-	$: {
-	}
+	const generateTopicContent = async (topic_name: string) => {
+		loadingContent = true;
+		try {
+			let topicContent = await getCourseContent(topic_name);
+			const updateTopicRef = doc(fireStoreDb, 'topics', topic_id);
+			let resources: Resource[] = [];
+
+			topicContent?.resources.forEach((resource) => {
+				const newResource = {
+					...resource,
+					url: resource.url.replace(/'/g, '')
+				};
+				resources.push(newResource);
+			});
+			await updateDoc(updateTopicRef, {
+				note: topicContent?.note,
+				resources: topicContent?.resources
+			});
+
+			if (topic) {
+				topic.note = topicContent?.note;
+				topic.resources = resources as Resource[];
+			}
+		} catch (e) {
+			showToast('Error generating topic content', 'error');
+		} finally {
+			loadingContent = false;
+		}
+	};
 
 	const loadContent = async (topic_id: string) => {
 		pageDataLoaded = false;
@@ -88,33 +118,7 @@
 		}
 
 		if (!topic?.note) {
-			loadingContent = true;
-			try {
-				let topicContent = await getCourseContent(topic?.name || '');
-				const updateTopicRef = doc(fireStoreDb, 'topics', topic_id);
-				let resources: Resource[] = [];
-
-				topicContent?.resources.forEach((resource) => {
-					const newResource = {
-						...resource,
-						url: resource.url.replace(/'/g, '')
-					};
-					resources.push(newResource);
-				});
-				await updateDoc(updateTopicRef, {
-					note: topicContent?.note,
-					resources: topicContent?.resources
-				});
-
-				if (topic) {
-					topic.note = topicContent?.note;
-					topic.resources = resources as Resource[];
-				}
-			} catch (e) {
-				showToast('Error generating topic content', 'error');
-			} finally {
-				loadingContent = false;
-			}
+			await generateTopicContent(topic?.name || '');
 		}
 	};
 
@@ -124,6 +128,10 @@
 
 	onMount(async () => {
 		await loadContent(topic_id);
+
+		topics = await getTopics(topic?.courseId || '');
+
+		//  console.log(getTopicIndex(parentTopic));
 	});
 
 	function extractVideoIdFromYouTubeUrl(url: string): string | null {
@@ -183,12 +191,24 @@
 			<section
 				class="no-scrollbar relative h-full max-h-screen overflow-y-scroll rounded bg-white lg:col-span-8"
 			>
-				<div class="sticky top-0 border-b-2 bg-white p-5">
+				<div class="sticky top-0 flex w-full items-center justify-between border-b-2 bg-white p-5">
 					<h2 class="font-lato text-2xl font-bold text-primary-main_text-grey">
-						{topic?.name}
+						{topic?.parentTopicId ? 'Subtopic' : 'Topic'} : {topic?.name}
 					</h2>
+					<div>
+						<button
+							on:click={async () => await generateTopicContent(topic?.name || '')}
+							class="rounded-lg border-2 border-primary-main-green px-3 py-2"
+						>
+							Regenerate Topic
+						</button>
+					</div>
 				</div>
-				<div class="prose max-w-none p-7 text-primary-main_text-grey">
+				<div
+					on:mousedown={(e) => console.log(e)}
+					on:mouseup={(e) => console.log(e)}
+					class="prose max-w-none p-7 text-primary-main_text-grey"
+				>
 					{@html snarkdown(topic?.note || '')}
 				</div>
 			</section>
@@ -204,20 +224,22 @@
 							<div class="space-y-5 p-5">
 								{#each topic.subtopics as subtopic}
 									<Card.Root
-										class="flex  flex-col gap-5 rounded-lg bg-white px-2.5 py-4 shadow md:border-0 md:border-r-4 md:border-r-primary-main-green/60"
+										class="flex  flex-col gap-5 rounded-lg bg-white px-2.5 py-4 shadow md:border-0 md:border-l-4 md:border-l-secondary-supporting-light-blue"
 									>
-										<Card.Content
-											class="flex flex-col gap-2 rounded-lg  px-2.5 py-3 font-lato text-primary-main_text-grey shadow-none"
-										>
-											<!-- <span class="text-xs font-semibold">Description</span> -->
-
-											<a
-												href="/app/course/{course_slug}/{subtopic.id}"
-												class="line-clamp-4 text-sm underline hover:font-semibold"
-												>{subtopic.name}</a
+										<a href="/app/course/{course_slug}/{subtopic.id}">
+											<Card.Header
+												class="flex w-full flex-row items-center justify-between rounded-lg  p-3 font-lato text-primary-main_text-grey "
 											>
-										</Card.Content>
-										<!-- {/if} -->
+												<section class="flex flex-col gap-1">
+													<!-- <Card.Description class="text-xs text-primary-main_text-grey"
+									>Topic</Card.Description
+								> -->
+													<Card.Title class="font-semibold">
+														{subtopic.name}
+													</Card.Title>
+												</section>
+											</Card.Header>
+										</a>
 									</Card.Root>
 								{/each}
 							</div>

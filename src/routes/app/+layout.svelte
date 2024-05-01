@@ -41,7 +41,7 @@
 {#if page_loaded}
 	<div class="relative flex flex-col bg-background">
 		<TopNavbar />
-		<section class="flex">
+		<section class="flex md:mt-20">
 			<SideNavbar bind:open={sideNavState} />
 			<MobileNav />
 			<div
@@ -49,7 +49,7 @@
 					? 'md:ml-60'
 					: 'md:ml-28'} min-h-screen w-full overflow-y-scroll bg-secondary-background pb-28 transition-all md:pb-0"
 			>
-				<section class=""></section>
+				<!-- <section class=""></section> -->
 				<slot />
 			</div>
 		</section>

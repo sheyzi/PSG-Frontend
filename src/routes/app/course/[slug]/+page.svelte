@@ -9,6 +9,8 @@
 	import { collection, getDocs, query, where } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import * as Card from '$lib/components/ui/card';
+	import { getTopics } from '$lib/services';
+	import snarkdown from 'snarkdown';
 
 	const slug = $page.params.slug;
 
@@ -29,65 +31,6 @@
 				id: course.id,
 				topics
 			};
-		}
-	};
-
-	const structureTopics = (topics: Topic[]): Topic[] => {
-		const topicMap = new Map<string, Topic>();
-
-		function buildStructure(parentId?: string): Topic[] {
-			let topicsToRestructure = [];
-			if (parentId) {
-				topicsToRestructure = topics.filter((topic) => topic.parentTopicId === parentId);
-			} else {
-				topicsToRestructure = topics.filter((topic) => !topic.parentTopicId);
-			}
-
-			return topicsToRestructure.map((topic) => {
-				const structuredTopic = { ...topic, subtopics: buildStructure(topic.id) };
-				topicMap.set(topic.id, structuredTopic);
-				return structuredTopic;
-			});
-		}
-
-		// Find root topics (no parentTopicId)
-		const structuredTopics = buildStructure(); // Build the hierarchy
-		return structuredTopics;
-	};
-
-	const getTopics = async (courseId: string, parentTopicId?: string) => {
-		const topicsRef = collection(fireStoreDb, 'topics');
-
-		let q = query(topicsRef, where('courseId', '==', courseId));
-
-		if (parentTopicId) {
-			q = query(
-				topicsRef,
-				where('courseId', '==', courseId),
-				where('parentTopicId', '==', parentTopicId)
-			);
-		}
-
-		const topicsSnap = await getDocs(q);
-
-		if (topicsSnap.empty) {
-			return [];
-		} else {
-			let topics: Topic[] = [];
-
-			topicsSnap.forEach((topic) => {
-				let topicData = topic.data() as Topic;
-
-				topics.push({
-					id: topic.id,
-					...topicData,
-					subtopics: []
-				});
-			});
-
-			topics = structureTopics(topics);
-
-			return topics;
 		}
 	};
 
@@ -125,7 +68,7 @@
 			</button> -->
 		</section>
 
-		<section class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+		<section class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{#each course.topics as topic}
 				<div>
 					<Card.Root
@@ -149,14 +92,6 @@
 								></iconify-icon>
 							</button>
 						</Card.Header>
-						{#if course.course_desc && course.course_desc.length > 0}
-							<Card.Content
-								class="flex flex-col gap-2 rounded-lg border-2 border-primary-grey/5 px-2.5 py-3 font-lato text-primary-main_text-grey shadow-none"
-							>
-								<span class="text-xs font-semibold">Description</span>
-								<p class="line-clamp-4 text-sm">{course.course_desc}</p>
-							</Card.Content>
-						{/if}
 					</Card.Root>
 				</div>
 			{/each}

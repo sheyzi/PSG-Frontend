@@ -2,14 +2,15 @@
 	import { addCourseModalState } from '$lib/stores/store';
 </script>
 
-<div class="sticky top-0 z-50 hidden h-20 bg-white shadow md:block">
+<div class="fixed top-0 z-50 hidden h-20 w-screen bg-white shadow md:block">
 	<nav class="relative flex h-full w-full items-center gap-16 px-3">
-		<section
+		<a
+			href="/app"
 			class="flex h-full w-[268px] items-center gap-2 border-r pr-2 text-xs xl:min-w-fit xl:text-sm"
 		>
 			<img src="/assets/PSG_LOGO.svg" alt="Personalized study guide logo" />
 			<h5 class="font-lato font-bold text-primary-main_text-grey">Personalized Study Guide</h5>
-		</section>
+		</a>
 		<section class="flex h-full w-full items-center justify-between">
 			<div class="flex items-center gap-1">
 				<img
