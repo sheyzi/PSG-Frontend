@@ -293,7 +293,7 @@
 													<!-- <Card.Description class="text-xs text-primary-main_text-grey"
 									>Topic</Card.Description
 								> -->
-													<Card.Title class="font-semibold">
+													<Card.Title class="text-sm font-semibold">
 														{subtopic.name}
 													</Card.Title>
 												</section>

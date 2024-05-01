@@ -37,7 +37,7 @@
 {:else if !course?.topics?.length}
 	<div class="h-full w-full">There are no topics</div>
 {:else}
-	<div class="h-full w-full px-8 py-10">
+	<div class="h-full w-full px-4 py-10 md:px-8">
 		<section class="mb-8 flex w-full items-center justify-between">
 			<h1 class="font-lato text-4xl font-bold text-primary-main_text-grey">
 				{course.course_title}

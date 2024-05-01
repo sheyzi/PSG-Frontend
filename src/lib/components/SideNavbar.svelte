@@ -64,7 +64,7 @@
 			</h5>
 
 			<ul class="flex w-full flex-col gap-4">
-				<li class="w-full">
+				<li class="w-full text-sm">
 					<a
 						class="flex {($page.url.pathname === '/app' ||
 							$page.url.pathname.startsWith('/app/course')) &&
@@ -73,19 +73,20 @@
 						href="/"
 					>
 						<img src="/assets/Notes Icon.svg" alt="notes icon" />
-						<span class="{!open && 'hidden'} transition-all delay-200 duration-700"
+						<span class="{!open && 'hidden'} text-sm transition-all delay-200 duration-700"
 							>All Courses</span
 						>
 					</a>
 				</li>
-				<li class="w-full">
+				<li class="w-full text-sm">
 					<a
 						class="flex w-full items-center {!open &&
 							'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
 						href="/"
 					>
 						<img src="/assets/Calendar With Clock Icon.svg" alt="Calendar With Clock Icon" />
-						<span class="  {!open && 'hidden'} transition-all duration-700">My Learning Cale..</span
+						<span class=" text-sm {!open && 'hidden'} transition-all duration-700"
+							>My Learning Cale..</span
 						>
 					</a>
 				</li>
@@ -109,7 +110,7 @@
 									'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
 							>
 								<img src="/assets/Person Icon.svg" alt="Person Icon" />
-								<span class=" {!open && 'hidden'} transition-all delay-200 duration-700"
+								<span class=" text-sm {!open && 'hidden'} transition-all delay-200 duration-700"
 									>Profile</span
 								>
 							</div>
@@ -135,14 +136,16 @@
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
 				</li>
-				<li class="w-full">
+				<li class="w-full text-sm">
 					<a
 						class="flex w-full items-center {!open &&
 							'justify-center'} gap-2 rounded-lg px-2 py-2 font-lato text-base hover:bg-secondary-supporting-light-blue"
 						href="/app"
 					>
 						<img src="/assets/Settings Icon.svg" alt="Settings Icon" />
-						<span class=" {!open && 'hidden'} transition-all delay-200 duration-700">Settings</span>
+						<span class=" {!open && 'hidden'} text-sm transition-all delay-200 duration-700"
+							>Settings</span
+						>
 					</a>
 				</li>
 			</ul>
