@@ -3,10 +3,8 @@
 	import { mediaQuery } from 'svelte-legos';
 	import * as Card from '$lib/components/ui/card';
 	import { collection, getDocs, query, where } from 'firebase/firestore';
-	import { courses, addCourseModalState } from '$lib/stores/store';
+	import { courses, addCourseModalState, currentUser } from '$lib/stores/store';
 	import type { RawCourse } from '$lib/types/types';
-
-	const isDesktop = mediaQuery('(min-width: 768px)');
 
 	const getAllCourses = async () => {
 		const course_query = query(
@@ -32,6 +30,62 @@
 <svelte:head>
 	<title>All Courses - PSG AI</title>
 </svelte:head>
+
+{#if $courses.length < 1}
+	<div
+		class="no-scrollbar fixed left-0 top-0 z-50 hidden h-screen w-screen grid-cols-5 bg-white md:grid"
+	>
+		<div class="relative col-span-2 h-full w-full p-6">
+			<section class="flex max-w-fit items-center gap-2.5 px-2 py-3.5">
+				<img src="/assets/PSG_LOGO.svg" alt="Personalized study guide logo" />
+				<h5 class="font-lato font-bold text-primary-main_text-grey">Personalized Study Guide</h5>
+			</section>
+			<section class="absolute left-0 top-[50%] flex w-full flex-col items-center justify-center">
+				<h3 class="font-lato text-3xl font-bold text-primary-main_text-grey">
+					Welcome, <span class="text-primary-main-blue"
+						>{$currentUser?.displayName?.split(' ')[0]}</span
+					>!
+				</h3>
+				<div class="flex w-full max-w-xs flex-col items-center gap-8">
+					<button
+						on:click={() => addCourseModalState.set(true)}
+						class="mt-10 rounded-full bg-secondary-supporting-light-blue px-10 py-2.5 font-lato text-sm"
+					>
+						Create new course using AI
+					</button>
+				</div>
+			</section>
+		</div>
+		<div
+			class="relative col-span-3 flex h-full w-full items-center justify-center bg-primary-main-green"
+		>
+			<section id="illustrations-container">
+				<img
+					class="absolute right-0 top-0"
+					src="/assets/Illustration(top-right).svg"
+					alt="A simple illustration with no practical function, used for aesthetics"
+				/>
+				<img
+					class="absolute bottom-0 left-0"
+					src="/assets/Illustration(bottom-left).svg"
+					alt="A simple illustration with no practical function, used for aesthetics"
+				/>
+			</section>
+			<section class="flex h-full flex-col items-start justify-center gap-5">
+				<!-- <div class="flex w-full items-center justify-center"> -->
+				<h1 class="font-montserrat text-[60px] font-bold text-primary-main_text-white">
+					Leveraging AI to help <br />
+					you be the best...
+				</h1>
+				<!-- </div> -->
+				<p class="font-montserrat text-xl font-medium text-primary-main_text-white">
+					At any course.
+				</p>
+			</section>
+		</div>
+	</div>
+{/if}
+
 <div class="h-full w-full py-10">
 	<section class=" px-8">
 		<h1 class="mb-5 font-lato text-[32px] text-primary-main_text-grey">All Courses</h1>

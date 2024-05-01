@@ -264,7 +264,9 @@
 	{#if isDesktop}
 		<button
 			disabled={loadingFile || loading}
-			class=" flex items-center justify-center rounded-[20px] bg-primary-main-green px-5 py-2.5 text-white"
+			class=" flex items-center justify-center rounded-[20px] {loadingFile
+				? 'bg-primary-main-green/50'
+				: 'bg-primary-main-green'} px-5 py-2.5 text-sm text-white"
 			type="submit"
 		>
 			{#if loading}
