@@ -31,7 +31,7 @@
 					class="flex items-center gap-2 font-lato text-sm font-bold text-primary-main_text-grey"
 				>
 					<img src="/assets/Play icon.svg" alt="play icon" />
-					<span>Tutorial</span>
+					<span>Quiz</span>
 				</button>
 				<button class="flex h-12 w-12 items-center justify-center rounded-full bg-[#EEEEEE]"
 					><img class="" src="/assets/Bell icon.svg" alt="bell icon" /></button
