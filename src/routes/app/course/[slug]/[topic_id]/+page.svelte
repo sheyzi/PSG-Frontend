@@ -9,7 +9,7 @@
 	import { fireStoreDb } from '$lib/firebase';
 	import type { RawTopicContent, Resource, Topic } from '$lib/types/types';
 	import { showToast } from '$lib/utils';
-	import { doc, getDoc, updateDoc } from 'firebase/firestore';
+	import { doc, getDoc, getDocs, updateDoc, collection, query, where } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import * as Card from '$lib/components/ui/card';
 
@@ -25,12 +25,33 @@
 		if (!topicSnap.exists()) {
 			return null;
 		} else {
+			const course_id = topicSnap.data().courseId;
+			const subTopicsRef = query(
+				collection(fireStoreDb, 'topics'),
+				where('courseId', '==', course_id),
+				where('parentTopicId', '==', topic_id)
+			);
+			const subTopicSnapShot = await getDocs(subTopicsRef);
+			// console.log(subTopicSnapShot.docs);
+			let subtopics: Topic[] = [];
+
+			if (!subTopicSnapShot.empty) {
+				subTopicSnapShot.forEach((subtopic) => {
+					subtopics.push({
+						...(subtopic.data() as Topic),
+						id: subtopic.id
+					});
+				});
+			}
 			return {
 				...(topicSnap.data() as Topic),
-				id: topicSnap.id
+				id: topicSnap.id,
+				subtopics
 			};
 		}
 	};
+
+	$: console.log(topic);
 
 	const getCourseContent = async (topic_name: string): Promise<RawTopicContent | null> => {
 		try {
@@ -156,48 +177,83 @@
 					{@html snarkdown(topic?.note || '')}
 				</div>
 			</section>
-			<aside
-				class="no-scrollbar relative h-full max-h-screen overflow-y-scroll rounded bg-white lg:col-span-4"
-			>
-				<div class="sticky top-0 border-b-2 bg-white p-5">
-					<h2 class="font-lato text-2xl font-bold text-primary-main_text-grey">Resources</h2>
-				</div>
-				<div class="space-y-5 p-5">
-					{#if topic}
-						{#if topic.resources}
-							{#each topic.resources.reverse() as resource}
-								<Card.Root
-									class="flex  flex-col gap-5 rounded-lg bg-white px-2.5 py-4 shadow md:border-0 md:border-r-4 md:border-r-secondary-supporting-light-blue"
-								>
-									<Card.Content
-										class="flex flex-col gap-2 rounded-lg  px-2.5 py-3 font-lato text-primary-main_text-grey shadow-none"
+			<aside class=" grid h-full max-h-screen space-y-5 pb-5 lg:col-span-4">
+				{#if topic}
+					{#if topic.subtopics && topic.subtopics?.length > 0}
+						<div
+							class="no-scrollbar relative h-full max-h-[40vh] overflow-y-scroll rounded bg-white"
+						>
+							<div class="sticky top-0 border-b-2 bg-white p-5">
+								<h2 class="font-lato text-2xl font-bold text-primary-main_text-grey">Subtopics</h2>
+							</div>
+							<div class="space-y-5 p-5">
+								{#each topic.subtopics as subtopic}
+									<Card.Root
+										class="flex  flex-col gap-5 rounded-lg bg-white px-2.5 py-4 shadow md:border-0 md:border-r-4 md:border-r-primary-main-green/60"
 									>
-										<!-- <span class="text-xs font-semibold">Description</span> -->
+										<Card.Content
+											class="flex flex-col gap-2 rounded-lg  px-2.5 py-3 font-lato text-primary-main_text-grey shadow-none"
+										>
+											<!-- <span class="text-xs font-semibold">Description</span> -->
 
-										{#if resource.url.includes('youtube.com')}
-											<iframe
-												class="w-full rounded"
-												src={getYoutubeEmbedUrl(resource.url)}
-												title="YouTube video player"
-												frameborder="0"
-												allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-												allowfullscreen
-											>
-											</iframe>
-										{:else}
 											<a
-												href={resource.url}
+												href="/app/course/{course_slug}/{subtopic.id}"
 												class="line-clamp-4 text-sm underline hover:font-semibold"
-												>{resource.content}</a
+												>{subtopic.name}</a
 											>
-										{/if}
-									</Card.Content>
-									<!-- {/if} -->
-								</Card.Root>
-							{/each}
-						{/if}
+										</Card.Content>
+										<!-- {/if} -->
+									</Card.Root>
+								{/each}
+							</div>
+						</div>
 					{/if}
-				</div>
+				{/if}
+				<section
+					class=" no-scrollbar relative h-full {topic?.subtopics && topic?.subtopics.length > 0
+						? 'max-h-[60vh]'
+						: 'max-h-full'} overflow-y-scroll rounded bg-white"
+				>
+					<div class="sticky top-0 border-b-2 bg-white p-5">
+						<h2 class="font-lato text-2xl font-bold text-primary-main_text-grey">Resources</h2>
+					</div>
+					<div class="space-y-5 p-5">
+						{#if topic}
+							{#if topic.resources}
+								{#each topic.resources.reverse() as resource}
+									<Card.Root
+										class="flex  flex-col gap-5 rounded-lg bg-white px-2.5 py-4 shadow md:border-0 md:border-r-4 md:border-r-secondary-supporting-light-blue"
+									>
+										<Card.Content
+											class="flex flex-col gap-2 rounded-lg  px-2.5 py-3 font-lato text-primary-main_text-grey shadow-none"
+										>
+											<!-- <span class="text-xs font-semibold">Description</span> -->
+
+											{#if resource.url.includes('youtube.com')}
+												<iframe
+													class="w-full rounded"
+													src={getYoutubeEmbedUrl(resource.url)}
+													title="YouTube video player"
+													frameborder="0"
+													allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+													allowfullscreen
+												>
+												</iframe>
+											{:else}
+												<a
+													href={resource.url}
+													class="line-clamp-4 text-sm underline hover:font-semibold"
+													>{resource.content}</a
+												>
+											{/if}
+										</Card.Content>
+										<!-- {/if} -->
+									</Card.Root>
+								{/each}
+							{/if}
+						{/if}
+					</div>
+				</section>
 			</aside>
 		</div>
 	{/if}
