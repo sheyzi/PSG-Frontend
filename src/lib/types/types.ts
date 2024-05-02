@@ -35,3 +35,20 @@ export interface Course extends RawCourse {
 	id?: string;
 	topics?: Topic[];
 }
+
+export type QuizRequestParam = {
+	text: string;
+	topic: string;
+};
+
+export type Quiz = {
+	question: string;
+	options: Record<'a' | 'b' | 'c' | 'd', string>;
+	answer: 'a' | 'b' | 'c' | 'd';
+	hint: string;
+	'answer-explanation': string;
+};
+
+export type QuizResponse =
+	| { status: 'success'; quizzes: Quiz[] }
+	| { status: 'error'; message: string };
