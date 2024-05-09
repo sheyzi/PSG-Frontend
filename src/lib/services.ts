@@ -1,6 +1,6 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import type { Course, RawCourse, Topic } from './types/types';
 import { fireStoreDb } from './firebase';
+import type { Course, Quiz, RawCourse, Topic } from './types/types';
 
 export const structureTopics = (topics: Topic[]): Topic[] => {
 	const topicMap = new Map<string, Topic>();
@@ -76,4 +76,8 @@ export const getCourse = async (slug: string): Promise<Course | null> => {
 			topics
 		};
 	}
+};
+
+export const getQuizzes = async (topic: string, text: string): Quiz[] => {
+	return;
 };
