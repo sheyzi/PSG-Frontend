@@ -11,14 +11,19 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import CourseForm from '$lib/components/CourseForm.svelte';
 	import { addCourseModalState, currentUser } from '$lib/stores/store';
+	import QuizModal from '$lib/components/QuizModal.svelte';
+	import { mediaQuery } from 'svelte-legos';
 
 	let loading = false;
 	let open = false;
 
 	$: open = $addCourseModalState;
 
+	const isDesktop = mediaQuery('min-width: 1024px');
+	$: console.log($isDesktop);
+
 	let page_loaded = false;
-	let sideNavState = true;
+	let sideNavState = $isDesktop ? true : false;
 
 	const isLoggedIn = async () => {
 		if (!firebaseAuth.currentUser) {
@@ -76,6 +81,7 @@
 			</Dialog.Content>
 		</div>
 	</Dialog.Root>
+	<QuizModal />
 {:else}
 	<div class="flex h-screen w-screen items-center justify-center">
 		<iconify-icon icon="line-md:loading-twotone-loop" class="text-primary-main-yellow" width="35"

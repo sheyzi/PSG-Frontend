@@ -32,6 +32,14 @@
 	});
 </script>
 
+<svelte:head>
+	{#if course}
+		<title>{course.course_title} - PSG AI</title>
+	{:else}
+		<title>Course - PSG AI</title>
+	{/if}
+</svelte:head>
+
 {#if !pageDataLoaded}
 	<Loader />
 {:else if !course?.topics?.length}

@@ -12,6 +12,7 @@
 	import { onMount } from 'svelte';
 	import * as Card from '$lib/components/ui/card';
 	import { getCourse, getTopics } from '$lib/services';
+	import { currTopic, type TopicToSend } from '$lib/stores/topic.store';
 
 	let topic_id = $page.params.topic_id;
 	let course_slug = $page.params.slug;
@@ -160,8 +161,22 @@
 		const thumbnailUrl = `https://www.youtube.com/embed/${videoId}`;
 		return thumbnailUrl;
 	};
+	$: {
+		const topicToSend = {
+			topic: topic?.name,
+			text: topic?.note
+		};
+		currTopic.set(topicToSend as TopicToSend);
+	}
 </script>
 
+<svelte:head>
+	{#if topic}
+		<title>{topic.name} - PSG AI</title>
+	{:else}
+		<title>Course - PSG AI</title>
+	{/if}
+</svelte:head>
 <div class="p-5">
 	{#if !pageDataLoaded}
 		<Loader />

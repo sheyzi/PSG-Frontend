@@ -50,6 +50,7 @@
 		"lucide-svelte": "^0.376.1",
 		"snarkdown": "^2.0.0",
 		"svelte-legos": "^0.2.2",
+		"svelte-radix": "^1.1.0",
 		"svelte-sonner": "^0.3.22",
 		"tailwind-merge": "^2.3.0",
 		"tailwind-variants": "^0.2.1",
