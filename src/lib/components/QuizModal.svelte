@@ -39,7 +39,7 @@
 	}
 
 	// $: console.log('time left', timeLeft);
-	$: console.log('Quiz', $Quizzes);
+	// $: console.log('Quiz', $Quizzes);
 
 	function timer() {
 		timeLeft = 120;
@@ -79,12 +79,11 @@
 		if (selectedOption === $currQuiz?.answer) {
 			score[0] = score[0] + 100 / $Quizzes.length;
 		}
-		// nextQuestion();
 	}
 
 	let score = [0];
 
-	$: console.log(score);
+	// $: console.log(score);
 
 	const thresholds = [
 		{
@@ -238,7 +237,7 @@
 							<div
 								class=" flex flex-col items-center justify-center space-y-8 py-6 text-primary-main_text-grey transition-all"
 							>
-								<div class="w-full max-w-72">
+								<div class="w-full max-w-52">
 									<p class="text-bold mb-3 text-center font-montserrat text-xl">Your score:</p>
 									<ProgressBar
 										bind:series={score}
