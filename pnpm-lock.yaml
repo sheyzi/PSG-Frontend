@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@okrad/svelte-progressbar':
+    specifier: ^2.2.0
+    version: 2.2.0(svelte@4.2.15)
   '@tailwindcss/typography':
     specifier: ^0.5.13
     version: 0.5.13(tailwindcss@3.4.3)
@@ -988,6 +991,14 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
+
+  /@okrad/svelte-progressbar@2.2.0(svelte@4.2.15):
+    resolution: {integrity: sha512-JB5XECrj0dEYJNnAH07XkIL5xObr9SIf0ora+wlNV9c2xwPQwlCCIWNnF8ZxH/V81QYa132c57piR0JWQRhZ3g==}
+    peerDependencies:
+      svelte: ^4.0.4
+    dependencies:
+      svelte: 4.2.15
+    dev: false
 
   /@pkgjs/parseargs@0.11.0:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}

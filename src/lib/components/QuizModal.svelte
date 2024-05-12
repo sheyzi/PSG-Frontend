@@ -2,80 +2,21 @@
 	import { page } from '$app/stores';
 	import { axiosClient } from '$lib/axios';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import * as Drawer from '$lib/components/ui/drawer/index.js';
-	import { QuizModalState, Quizzes, currQuiz, type Quiz } from '$lib/stores/quiz.store';
+	import * as Sheet from '$lib/components/ui/sheet/index.js';
+	import * as Popover from '$lib/components/ui/popover';
+	import { QuizModalState, QuizTimer, Quizzes, currQuiz, type Quiz } from '$lib/stores/quiz.store';
 	import { currTopic } from '$lib/stores/topic.store';
 	import { showToast } from '$lib/utils';
 	import { slide } from 'svelte/transition';
+	import ProgressBar from '@okrad/svelte-progressbar';
+	import * as Accordion from '$lib/components/ui/accordion/index.js';
 
-	const data = [
-		{
-			id: 1,
-			goal: 400
-		},
-		{
-			id: 2,
-			goal: 300
-		},
-		{
-			id: 3,
-			goal: 200
-		},
-		{
-			id: 4,
-			goal: 300
-		},
-		{
-			id: 5,
-			goal: 200
-		},
-		{
-			id: 6,
-			goal: 278
-		},
-		{
-			id: 7,
-			goal: 189
-		},
-		{
-			id: 8,
-			goal: 239
-		},
-		{
-			id: 9,
-			goal: 300
-		},
-		{
-			id: 10,
-			goal: 200
-		},
-		{
-			id: 11,
-			goal: 278
-		},
-		{
-			id: 12,
-			goal: 189
-		},
-		{
-			id: 13,
-			goal: 349
-		}
-	];
-	const x = (d: { goal: number; id: number }) => d.id;
-	const y = (d: { goal: number; id: number }) => d.goal;
-
-	let goal = 350;
 	let generating = false;
 	let currentQuestionIndex = 0;
-	let score = 0;
+
 	let timeLeft = 120;
 	let timerInterval;
-	$: formattedTime = '';
-
-	function handleClick(adjustment: number) {
-		goal = Math.max(200, Math.min(400, goal + adjustment));
-	}
+	let formattedTime = '0';
 
 	function displayQuestion() {
 		answerStatus = null;
@@ -84,40 +25,40 @@
 	}
 
 	function updateFormattedTime() {
+		if (timeLeft === 0) {
+			// console.log('formatted time', formattedTime);
+			QuizTimer.set('0:00');
+			return;
+		}
 		const minutes = Math.floor(timeLeft / 60);
 		const seconds = timeLeft % 60;
 
 		const paddedSeconds = seconds < 10 ? '0' + seconds : seconds;
-
 		formattedTime = `${minutes}:${paddedSeconds}`;
-		// console.log(formattedTime);
+		QuizTimer.set(formattedTime);
 	}
 
+	// $: console.log('time left', timeLeft);
+	$: console.log('Quiz', $Quizzes);
+
 	function timer() {
-		timeLeft = 2 * 60;
-		updateFormattedTime();
+		timeLeft = 120;
+
 		timerInterval = setInterval(() => {
 			timeLeft--;
-			updateFormattedTime();
 			if (timeLeft === 0) {
 				clearInterval(timerInterval);
 				nextQuestion();
 			}
+			updateFormattedTime();
 		}, 1000);
 	}
 
-	function nextQuestion(direction?: string) {
-		answerStatus = null;
+	function nextQuestion() {
 		selectedAnswer = '';
-		if (direction) {
-			if (direction === 'next') {
-				currentQuestionIndex++;
-			} else {
-				currentQuestionIndex--;
-			}
-		} else {
-			currentQuestionIndex++;
-		}
+		answerStatus = null;
+		currentQuestionIndex++;
+
 		if (currentQuestionIndex < $Quizzes.length) {
 			displayQuestion();
 		} else {
@@ -130,22 +71,39 @@
 	}
 
 	let answerStatus: null | 'correct' | 'wrong';
-	let selectedAnswer: string = '';
-	function selectAnswer(currAnswer: string) {
+	$: selectedAnswer = '';
+
+	function selectAnswer(currAnswer: string, selectedOption) {
 		selectedAnswer = currAnswer;
 
-		console.log('answer', currAnswer);
-		console.log($currQuiz);
-
-		if (currAnswer === $currQuiz?.answer) {
-			answerStatus = 'correct';
-		} else {
-			answerStatus = 'wrong';
+		if (selectedOption === $currQuiz?.answer) {
+			score[0] = score[0] + 100 / $Quizzes.length;
 		}
-		nextQuestion();
+		// nextQuestion();
 	}
-	$: console.log(answerStatus);
 
+	let score = [0];
+
+	$: console.log(score);
+
+	const thresholds = [
+		{
+			till: 40,
+			color: '#DD3428'
+		},
+		{
+			till: 60,
+			color: '#FBBF10'
+		},
+		{
+			till: 80,
+			color: '#1A73E8'
+		},
+		{
+			till: 100,
+			color: '#269745'
+		}
+	];
 	$: currTopicId = $page.params.topic_id;
 
 	const generateQuiz = async () => {
@@ -175,8 +133,8 @@
 	};
 </script>
 
-<Drawer.Root onOpenChange={(e) => QuizModalState.set(e)} bind:open={$QuizModalState}>
-	<Drawer.Content class=" h-[450px] bg-white">
+<Sheet.Root onOpenChange={(e) => QuizModalState.set(e)} bind:open={$QuizModalState}>
+	<Sheet.Content class="w-[90vw] bg-white">
 		<div class="relative h-full w-full bg-inherit">
 			{#if $Quizzes.length < 1}
 				<div
@@ -184,7 +142,7 @@
 					class="absolute left-0 top-0 flex h-full w-full bg-white"
 				>
 					<section
-						class="mx-auto my-3 flex w-full max-w-sm flex-col items-center justify-center rounded-md border-2 border-black"
+						class="mx-auto my-3 flex w-full max-w-sm flex-col items-center justify-center rounded-md border-black"
 					>
 						<h4 class="mb-10 font-lato text-3xl font-semibold">
 							Test yourself with <span class="text-primary-main-yellow"> Quiz AI</span>
@@ -209,54 +167,124 @@
 				</div>
 			{/if}
 
-			<div class=" mx-auto h-full w-full max-w-xl py-3">
-				<!-- <Drawer.Header>
-					<Drawer.Title>Quiz</Drawer.Title>
-					<Drawer.Description>Select your answer before time runs out.</Drawer.Description>
-				</Drawer.Header> -->
-				<div class=" no-scrollbar h-full max-h-[450px] overflow-y-scroll p-4">
+			<div class=" mx-auto h-full w-full max-w-4xl py-3">
+				<Sheet.Header class="flex-row items-center justify-between border-0 border-b-2 pb-3">
+					<div class="flex flex-col space-y-2">
+						<Sheet.Title class="font-lato text-xl font-semibold"
+							>Quiz <span class="text-primary-main-yellow">AI</span></Sheet.Title
+						>
+						<Sheet.Description>Select your answer before time runs out.</Sheet.Description>
+					</div>
 					{#if $currQuiz}
-						<Drawer.Header>
-							<Drawer.Title>
-								{formattedTime}
-							</Drawer.Title>
-						</Drawer.Header>
-						<div class=" flex flex-col items-start justify-center space-y-5">
-							<h5 class="flex flex-col items-start gap-2 font-lato text-xl font-semibold">
-								<span class="text-base">Question:</span>
-								<span>
-									{$currQuiz.question}
-								</span>
-							</h5>
-							<section class="w-full">
-								<ul class="flex w-full flex-col items-start space-y-5 px-4">
-									{#each Object.entries($currQuiz.options) as option}
-										<!-- {console.log(option)} -->
-										<button
-											on:click={() => selectAnswer(option[0])}
-											class="flex w-full items-center justify-start gap-2 rounded-full px-6 py-3.5 transition-all {selectedAnswer !==
-												option[0] &&
-												' bg-secondary-supporting-pale-blue  text-primary-main_text-grey hover:bg-primary-main-yellow hover:text-white'} {(selectedAnswer ==
-												option[0] &&
-												answerStatus === 'correct' &&
-												'  bg-primary-main-green text-white') ||
-												(selectedAnswer == option[0] &&
-													answerStatus === 'wrong' &&
-													'bg-primary-main-red text-white')}"
+						<span class="font-lato text-xl text-primary-main_text-grey">{$QuizTimer}</span>
+					{/if}
+				</Sheet.Header>
+				<div class=" no-scrollbar h-fit max-h-[90vh] overflow-y-scroll p-6">
+					{#if $Quizzes.length > 0}
+						{#if $currQuiz}
+							<div
+								in:slide={{ axis: 'x' }}
+								out:slide={{ axis: 'x' }}
+								class=" flex flex-col items-start justify-center space-y-8 py-6 transition-all"
+							>
+								<div class="flex w-full items-center justify-between">
+									<h5
+										class="flex max-w-[80%] flex-col items-start gap-2 font-lato text-2xl font-semibold"
+									>
+										{$currQuiz.question}
+									</h5>
+									<Popover.Root>
+										<Popover.Trigger>
+											<iconify-icon icon="icons8:idea" class="text-primary-main-yellow" width="28"
+											></iconify-icon>
+											<span class="sr-only">Hint</span>
+										</Popover.Trigger>
+										<Popover.Content
+											class="w-full min-w-fit max-w-lg rounded border-0 border-l-2 border-primary-main-yellow text-sm "
+											>{$currQuiz.hint}</Popover.Content
 										>
-											<iconify-icon icon="ri:radio-button-fill"></iconify-icon>
-											<span class="text-start font-lato">{option[1]}</span>
-										</button>
+									</Popover.Root>
+								</div>
+								<section class="w-full max-w-xl">
+									<ul class="flex w-full flex-col items-start space-y-5 px-4">
+										{#each Object.entries($currQuiz.options) as option}
+											<!-- {console.log(option)} -->
+											<button
+												disabled={$QuizTimer === '0:00'}
+												on:click={() => selectAnswer(option[1], option[0])}
+												class="flex w-full items-center justify-start gap-2 rounded-full px-6 py-3.5 text-primary-main_text-grey transition-all hover:text-white disabled:bg-muted disabled:hover:text-primary-grey {selectedAnswer ===
+												option[1]
+													? 'bg-primary-main-green text-white hover:bg-primary-main-green/80'
+													: 'bg-secondary-supporting-pale-blue hover:bg-primary-main-yellow'} "
+											>
+												<iconify-icon icon="ri:radio-button-fill"></iconify-icon>
+												<span class="text-start font-lato">{option[1]}</span>
+											</button>
+										{/each}
+									</ul>
+								</section>
+							</div>
+							<Sheet.Footer class={$Quizzes.length < 1 ? 'hidden' : 'flex max-w-xl'}>
+								<button
+									disabled={!selectedAnswer}
+									on:click={() => nextQuestion()}
+									class="flex items-center gap-1 rounded bg-black px-6 py-1.5 text-sm text-primary-main-yellow disabled:bg-muted disabled:text-black"
+								>
+									<span class="sr-only">Next question</span>
+									<iconify-icon icon="mage:next-fill" width="20"></iconify-icon>
+								</button>
+							</Sheet.Footer>
+						{:else}
+							<div
+								class=" flex flex-col items-center justify-center space-y-8 py-6 text-primary-main_text-grey transition-all"
+							>
+								<div class="w-full max-w-72">
+									<p class="text-bold mb-3 text-center font-montserrat text-xl">Your score:</p>
+									<ProgressBar
+										bind:series={score}
+										style="radial"
+										{thresholds}
+										thickness={3}
+										textSize={200}
+									/>
+								</div>
+
+								<Accordion.Root class="w-full space-y-2.5 sm:max-w-[70%]">
+									{#each $Quizzes as quiz}
+										<Accordion.Item value="item-{$Quizzes.indexOf(quiz) + 1}">
+											<Accordion.Trigger class="text-wrap text-start"
+												>{quiz.question}</Accordion.Trigger
+											>
+											<Accordion.Content class="flex flex-col space-y-5">
+												<div class="flex items-center gap-2 font-lato">
+													<span class="text-xs font-semibold">Answer:</span>
+													<p class=" uppercase">{quiz.answer}</p>
+												</div>
+												<!-- <div class="flex items-start gap-2 font-lato">
+														<span class="text-xs font-semibold text-primary-main-blue"
+															>Explanation:</span
+														>
+														<p>{quiz['answer-explanation']}</p>
+													</div> -->
+											</Accordion.Content>
+											<Accordion.Content class="flex flex-col ">
+												<!-- <div class="flex items-baseline gap-2 font-lato">
+														<span class="text-xs font-semibold">Answer:</span>
+														<p class="p-0 text-xl">{quiz.answer}</p>
+													</div> -->
+												<div class="flex items-start gap-2 font-lato">
+													<span class="text-xs font-semibold">Explanation:</span>
+													<p>{quiz['answer-explanation']}</p>
+												</div>
+											</Accordion.Content>
+										</Accordion.Item>
 									{/each}
-								</ul>
-							</section>
-						</div>
+								</Accordion.Root>
+							</div>
+						{/if}
 					{/if}
 				</div>
-				<Drawer.Footer>
-					<Button>Submit</Button>
-				</Drawer.Footer>
 			</div>
 		</div>
-	</Drawer.Content>
-</Drawer.Root>
+	</Sheet.Content>
+</Sheet.Root>

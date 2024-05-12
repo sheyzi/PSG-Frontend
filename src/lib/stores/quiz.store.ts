@@ -12,3 +12,4 @@ export const QuizModalState = writable<boolean>(false);
 
 export const currQuiz = writable<Quiz | null>(null);
 export const Quizzes = writable<Quiz[]>([]);
+export const QuizTimer = writable('');

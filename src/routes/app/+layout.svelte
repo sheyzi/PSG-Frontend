@@ -20,7 +20,7 @@
 	$: open = $addCourseModalState;
 
 	const isDesktop = mediaQuery('min-width: 1024px');
-	$: console.log($isDesktop);
+	// $: console.log($isDesktop);
 
 	let page_loaded = false;
 	let sideNavState = $isDesktop ? true : false;
